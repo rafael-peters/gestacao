@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Idade Gestacional | Dr. Rafael Peters</title>
+    <meta name="description" content="Calculadora interativa para converter semanas de gestação em meses, trimestres e dias. Inclui tabela de exames e consultas.">
+    <meta name="author" content="Dr. Rafael Peters - Medicina Fetal">
+    
+    <!-- Open Graph para compartilhamento -->
+    <meta property="og:title" content="Calculadora de Idade Gestacional">
+    <meta property="og:description" content="Descubra em qual mês da gestação você está. Calculadora interativa com tabela de exames.">
+    <meta property="og:type" content="website">
+    
+    <style>
+        /* ===== RESET E CONFIGURAÇÕES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --rosa: #EC4899;
+            --roxo: #8B5CF6;
+            --azul: #3B82F6;
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --texto: #ffffff;
+            --texto-secundario: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--texto);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--rosa), var(--roxo), var(--azul));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--texto-secundario);
+            font-size: 0.875rem;
+        }
+
+        /* ===== INSTRUÇÕES ===== */
+        .instrucoes {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .instrucoes h2 {
+            font-size: 1rem;
+            color: var(--roxo);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .instrucoes ul {
+            list-style: none;
+            font-size: 0.875rem;
+            color: var(--texto-secundario);
+        }
+
+        .instrucoes li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .instrucoes li::before {
+            content: "👉";
+            position: absolute;
+            left: 0;
+        }
+
+        .instrucoes .destaque {
+            color: var(--texto);
+            font-weight: 600;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .card-header.rosa { color: var(--rosa); }
+        .card-header.roxo { color: var(--roxo); }
+        .card-header.azul { color: var(--azul); }
+
+        /* ===== SLIDER ===== */
+        .slider-container {
+            margin-bottom: 20px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, var(--rosa) 0%, var(--rosa) 33%, var(--roxo) 33%, var(--roxo) 66%, var(--azul) 66%, var(--azul) 100%);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: var(--texto-secundario);
+        }
+
+        /* ===== RESULTADO ===== */
+        .resultado {
+            text-align: center;
+            padding: 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .resultado.tri1 {
+            background: rgba(236, 72, 153, 0.15);
+            border: 2px solid rgba(236, 72, 153, 0.4);
+        }
+        .resultado.tri2 {
+            background: rgba(139, 92, 246, 0.15);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+        }
+        .resultado.tri3 {
+            background: rgba(59, 130, 246, 0.15);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .resultado-semanas {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .tri1 .resultado-semanas { color: var(--rosa); }
+        .tri2 .resultado-semanas { color: var(--roxo); }
+        .tri3 .resultado-semanas { color: var(--azul); }
+
+        .resultado-mes {
+            font-size: 1.25rem;
+            color: var(--texto-secundario);
+            margin-bottom: 16px;
+        }
+
+        .resultado-mes strong {
+            color: var(--texto);
+        }
+
+        .resultado-detalhes {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.875rem;
+        }
+
+        .resultado-detalhes .linha {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.tri1 { background: rgba(236, 72, 153, 0.3); color: var(--rosa); }
+        .badge.tri2 { background: rgba(139, 92, 246, 0.3); color: var(--roxo); }
+        .badge.tri3 { background: rgba(59, 130, 246, 0.3); color: var(--azul); }
+
+        .separador {
+            color: var(--texto-secundario);
+        }
+
+        .resultado-range {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+        }
+
+        /* ===== TABELA ===== */
+        .tabela-header {
+            display: flex;
+            font-size: 0.7rem;
+            color: var(--texto-secundario);
+            padding: 0 8px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tabela-header span:nth-child(1) { width: 70px; }
+        .tabela-header span:nth-child(2) { flex: 1; text-align: center; }
+        .tabela-header span:nth-child(3) { width: 50px; text-align: right; }
+
+        .tabela-linha {
+            display: flex;
+            align-items: center;
+            padding: 10px 8px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+            border-left: 4px solid;
+        }
+
+        .tabela-linha.tri1 { background: rgba(236, 72, 153, 0.1); border-color: var(--rosa); }
+        .tabela-linha.tri2 { background: rgba(139, 92, 246, 0.1); border-color: var(--roxo); }
+        .tabela-linha.tri3 { background: rgba(59, 130, 246, 0.1); border-color: var(--azul); }
+
+        .tabela-linha.ativo {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 2px white;
+        }
+
+        .tabela-linha .mes {
+            width: 70px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .tabela-linha .semanas {
+            flex: 1;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .tabela-linha .semanas .seta {
+            color: var(--texto-secundario);
+            margin: 0 8px;
+        }
+
+        .tabela-linha.tri1 .semanas span { color: var(--rosa); }
+        .tabela-linha.tri2 .semanas span { color: var(--roxo); }
+        .tabela-linha.tri3 .semanas span { color: var(--azul); }
+
+        .tabela-linha .tri {
+            width: 50px;
+            text-align: right;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tabela-linha.tri1 .tri { color: var(--rosa); }
+        .tabela-linha.tri2 .tri { color: var(--roxo); }
+        .tabela-linha.tri3 .tri { color: var(--azul); }
+
+        /* ===== BARRA DE PROGRESSO ===== */
+        .progresso-container {
+            margin-top: 16px;
+        }
+
+        .progresso-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--rosa) 0%, var(--rosa) 33%, var(--roxo) 33%, var(--roxo) 66%, var(--azul) 66%, var(--azul) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progresso-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 0.7rem;
+            color: var(--texto-secundario);
+        }
+
+        /* ===== EXAMES E CONSULTAS ===== */
+        .exames-section {
+            margin-top: 8px;
+        }
+
+        .exame-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid;
+        }
+
+        .exame-card.tri1 { border-color: var(--rosa); }
+        .exame-card.tri2 { border-color: var(--roxo); }
+        .exame-card.tri3 { border-color: var(--azul); }
+
+        .exame-card h4 {
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .exame-card.tri1 h4 { color: var(--rosa); }
+        .exame-card.tri2 h4 { color: var(--roxo); }
+        .exame-card.tri3 h4 { color: var(--azul); }
+
+        .exame-lista {
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+        }
+
+        .exame-lista li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .exame-lista li::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--texto-secundario);
+        }
+
+        .exame-lista .destaque {
+            color: var(--texto);
+            font-weight: 500;
+        }
+
+        .exame-nota {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            font-style: italic;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+        }
+
+        .footer a {
+            color: var(--roxo);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer .creditos {
+            margin-top: 8px;
+            font-size: 0.875rem;
+            color: var(--texto);
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (min-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .resultado-semanas {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <h1>🤰 Calculadora de Idade Gestacional</h1>
+            <p>Descubra em qual mês da gestação você está</p>
+        </header>
+
+        <!-- INSTRUÇÕES -->
+        <section class="instrucoes">
+            <h2>📖 Como usar</h2>
+            <ul>
+                <li><span class="destaque">Arraste o cursor</span> na linha colorida para selecionar a semana de gestação</li>
+                <li>Veja instantaneamente o <span class="destaque">mês</span>, <span class="destaque">trimestre</span> e <span class="destaque">dias</span> correspondentes</li>
+                <li>A tabela abaixo mostra <span class="destaque">todas as conversões</span> de semanas para meses</li>
+                <li>Consulte os <span class="destaque">exames recomendados</span> para cada fase da gestação</li>
+            </ul>
+        </section>
+
+        <!-- CALCULADORA -->
+        <section class="card">
+            <div class="card-header roxo">
+                <span>🔢</span> Calculadora
+            </div>
+            
+            <!-- Slider -->
+            <div class="slider-container">
+                <input type="range" min="1" max="40" value="20" class="slider" id="semanaSlider">
+                <div class="slider-labels">
+                    <span>1</span>
+                    <span>5</span>
+                    <span>10</span>
+                    <span>15</span>
+                    <span>20</span>
+                    <span>25</span>
+                    <span>30</span>
+                    <span>35</span>
+                    <span>40</span>
+                </div>
+            </div>
+            
+            <!-- Resultado -->
+            <div class="resultado tri2" id="resultado">
+                <div class="resultado-semanas" id="semanaDisplay">20 semanas</div>
+                <div class="resultado-mes">= <strong id="mesDisplay">5º mês</strong></div>
+                
+                <div class="resultado-detalhes">
+                    <div class="linha">
+                        <span class="badge tri2" id="trimestreBadge">2º trimestre</span>
+                        <span class="separador">/</span>
+                        <span id="mesesCompletosDisplay">4 meses + 2 semanas + 2 dias</span>
+                        <span class="separador">/</span>
+                        <span id="diasDisplay">140 dias</span>
+                    </div>
+                </div>
+                
+                <div class="resultado-range" id="rangeDisplay">
+                    5º mês: 17s+5d a 22s+1d
+                </div>
+            </div>
+        </section>
+
+        <!-- TABELA -->
+        <section class="card">
+            <div class="card-header azul">
+                <span>📊</span> Tabela Completa
+            </div>
+            
+            <div class="tabela-header">
+                <span>Mês</span>
+                <span>Semanas</span>
+                <span>Tri</span>
+            </div>
+            
+            <div id="tabela">
+                <!-- Gerado via JavaScript -->
+            </div>
+            
+            <!-- Barra de progresso -->
+            <div class="progresso-container">
+                <div class="progresso-bar">
+                    <div class="progresso-fill" id="progressoFill" style="width: 50%"></div>
+                </div>
+                <div class="progresso-labels">
+                    <span>0</span>
+                    <span>40 sem</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXAMES E CONSULTAS -->
+        <section class="card">
+            <div class="card-header rosa">
+                <span>🩺</span> Exames e Consultas Recomendados
+            </div>
+            
+            <div class="exames-section" id="examesSection">
+                <!-- Gerado via JavaScript baseado na semana selecionada -->
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>Tabela baseada em 280 dias ÷ 9 meses = ~31 dias/mês</p>
+            <p>Contagem a partir da Data da Última Menstruação (DUM)</p>
+            <p class="creditos">
+                <strong>Dr. Rafael Peters</strong><br>
+                Especialista em Medicina Fetal e Ultrassonografia
+            </p>
+            <p style="margin-top: 12px;">
+                <a href="https://instagram.com/drrafaelpeters" target="_blank">📸 @drrafaelpeters</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // =====================================================
+        // DADOS DA TABELA EXCEL - PRECISOS
+        // =====================================================
+        const limitesMeses = [31, 62, 93, 124, 155, 186, 217, 248, 280];
+        
+        const conversao = [
+            { mes: 1, inicioSem: 0,  inicioDia: 0, fimSem: 4,  fimDia: 3, tri: 1 },
+            { mes: 2, inicioSem: 4,  inicioDia: 3, fimSem: 8,  fimDia: 6, tri: 1 },
+            { mes: 3, inicioSem: 8,  inicioDia: 6, fimSem: 13, fimDia: 2, tri: 1 },
+            { mes: 4, inicioSem: 13, inicioDia: 2, fimSem: 17, fimDia: 5, tri: 2 },
+            { mes: 5, inicioSem: 17, inicioDia: 5, fimSem: 22, fimDia: 1, tri: 2 },
+            { mes: 6, inicioSem: 22, inicioDia: 1, fimSem: 26, fimDia: 4, tri: 2 },
+            { mes: 7, inicioSem: 26, inicioDia: 4, fimSem: 31, fimDia: 0, tri: 3 },
+            { mes: 8, inicioSem: 31, inicioDia: 0, fimSem: 35, fimDia: 3, tri: 3 },
+            { mes: 9, inicioSem: 35, inicioDia: 3, fimSem: 40, fimDia: 0, tri: 3 },
+        ];
+
+        // =====================================================
+        // EXAMES E CONSULTAS POR PERÍODO
+        // =====================================================
+        const examesConsultas = {
+            // 1º TRIMESTRE (semanas 1-13)
+            '1-4': {
+                titulo: '🌱 Semanas 1-4 (1º mês)',
+                tri: 1,
+                exames: [
+                    '<span class="destaque">Teste de gravidez</span> (beta-hCG)',
+                    'Início do ácido fólico (se ainda não iniciou)',
+                ],
+                consultas: 'Primeira consulta pré-natal ao confirmar gravidez',
+                notas: 'Período de implantação do embrião. Evite medicamentos sem orientação médica.'
+            },
+            '5-8': {
+                titulo: '💗 Semanas 5-8 (2º mês)',
+                tri: 1,
+                exames: [
+                    '<span class="destaque">Ultrassom transvaginal</span> (confirmar gestação, batimentos)',
+                    'Tipagem sanguínea e fator Rh',
+                    'Hemograma completo',
+                    'Glicemia de jejum',
+                    'Sorologias (HIV, Sífilis, Hepatite B e C, Toxoplasmose, Rubéola, CMV)',
+                    'Urina tipo 1 e urocultura',
+                    'TSH (função tireoidiana)',
+                ],
+                consultas: 'Consulta pré-natal mensal',
+                notas: 'Período comum de náuseas. Batimentos cardíacos visíveis a partir de 6 semanas.'
+            },
+            '9-13': {
+                titulo: '✨ Semanas 9-13 (3º mês)',
+                tri: 1,
+                exames: [
+                    '<span class="destaque">Ultrassom morfológico de 1º trimestre</span> (11-14 semanas)',
+                    '<span class="destaque">Translucência Nucal (TN)</span>',
+                    'Rastreamento bioquímico (PAPP-A, beta-hCG livre)',
+                    'NIPT (teste pré-natal não invasivo) - opcional',
+                    'Biópsia de vilo corial - se indicado',
+                ],
+                consultas: 'Consulta pré-natal mensal',
+                notas: 'Melhor período para rastreamento de cromossomopatias (Síndrome de Down e outras).'
+            },
+            // 2º TRIMESTRE (semanas 14-26)
+            '14-17': {
+                titulo: '🎵 Semanas 14-17 (4º mês)',
+                tri: 2,
+                exames: [
+                    'Ultrassom obstétrico de rotina',
+                    'Repetir sorologias negativas (toxoplasmose)',
+                ],
+                consultas: 'Consulta pré-natal mensal',
+                notas: 'Período de maior bem-estar. Início dos movimentos fetais (primíparas podem sentir mais tarde).'
+            },
+            '18-22': {
+                titulo: '❤️ Semanas 18-22 (5º mês)',
+                tri: 2,
+                exames: [
+                    '<span class="destaque">Ultrassom morfológico de 2º trimestre</span> (20-24 semanas)',
+                    'Avaliação detalhada da anatomia fetal',
+                    'Ecocardiografia fetal - se indicada',
+                    'Amniocentese - se indicada',
+                ],
+                consultas: 'Consulta pré-natal mensal',
+                notas: 'Período ideal para ver o sexo do bebê e avaliar toda a anatomia fetal.'
+            },
+            '23-26': {
+                titulo: '🧠 Semanas 23-26 (6º mês)',
+                tri: 2,
+                exames: [
+                    '<span class="destaque">Teste de tolerância à glicose (TOTG 75g)</span> - 24 a 28 semanas',
+                    'Hemograma de controle',
+                    'Repetir sorologias',
+                ],
+                consultas: 'Consulta pré-natal quinzenal ou mensal',
+                notas: 'Rastreamento de diabetes gestacional. Bebê já responde a estímulos externos.'
+            },
+            // 3º TRIMESTRE (semanas 27-40)
+            '27-31': {
+                titulo: '👁️ Semanas 27-31 (7º mês)',
+                tri: 3,
+                exames: [
+                    '<span class="destaque">Ultrassom de 3º trimestre</span> (crescimento fetal)',
+                    'Vacina dTpa (difteria, tétano, coqueluche) - a partir de 20 semanas',
+                    'Anti-D (imunoglobulina) - se Rh negativo',
+                ],
+                consultas: 'Consulta pré-natal quinzenal',
+                notas: 'Bebê já tem ciclo de sono. Atenção para sinais de parto prematuro.'
+            },
+            '32-35': {
+                titulo: '🫁 Semanas 32-35 (8º mês)',
+                tri: 3,
+                exames: [
+                    '<span class="destaque">Ultrassom com Doppler</span> (avaliar fluxo sanguíneo)',
+                    'Cardiotocografia (CTG) - se indicada',
+                    '<span class="destaque">Cultura para Streptococcus B (GBS)</span> - 35 a 37 semanas',
+                    'Repetir sorologias (HIV, Sífilis, Hepatite B)',
+                    'Hemograma e coagulograma',
+                ],
+                consultas: 'Consulta pré-natal quinzenal',
+                notas: 'Avaliação da posição fetal e do líquido amniótico. Preparação para o parto.'
+            },
+            '36-40': {
+                titulo: '👶 Semanas 36-40 (9º mês)',
+                tri: 3,
+                exames: [
+                    'Ultrassom para avaliar peso estimado e posição',
+                    'Cardiotocografia semanal ou conforme indicação',
+                    'Avaliação do colo uterino',
+                    'Monitoramento do bem-estar fetal',
+                ],
+                consultas: 'Consulta pré-natal semanal',
+                notas: 'Reta final! Atenção para sinais de trabalho de parto: contrações regulares, perda do tampão mucoso, ruptura da bolsa.'
+            }
+        };
+
+        // =====================================================
+        // FUNÇÕES DE CÁLCULO
+        // =====================================================
+        function encontrarMes(dias) {
+            for (let i = 0; i < limitesMeses.length; i++) {
+                if (dias <= limitesMeses[i]) return i + 1;
+            }
+            return 9;
+        }
+
+        function encontrarTrimestre(dias) {
+            if (dias <= 93) return 1;
+            if (dias <= 186) return 2;
+            return 3;
+        }
+
+        function calcularMesesCompletos(dias) {
+            let mesesCompletos = 0;
+            for (let i = 0; i < limitesMeses.length; i++) {
+                if (dias > limitesMeses[i]) {
+                    mesesCompletos = i + 1;
+                } else {
+                    break;
+                }
+            }
+            const diasNoMesCompleto = mesesCompletos > 0 ? limitesMeses[mesesCompletos - 1] : 0;
+            const diasRestantes = dias - diasNoMesCompleto;
+            const semanasExtras = Math.floor(diasRestantes / 7);
+            const diasExtras = diasRestantes % 7;
+            return { mesesCompletos, semanasExtras, diasExtras };
+        }
+
+        function formatarSemanasDias(sem, dias) {
+            if (dias === 0) return `${sem}s`;
+            return `${sem}s+${dias}d`;
+        }
+
+        function formatarMesesCompletos(meses, semanas, dias) {
+            let texto = `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
+            if (semanas > 0) {
+                texto += ` + ${semanas} ${semanas === 1 ? 'semana' : 'semanas'}`;
+            }
+            if (dias > 0) {
+                texto += ` + ${dias} ${dias === 1 ? 'dia' : 'dias'}`;
+            }
+            return texto;
+        }
+
+        function obterExames(semana) {
+            if (semana <= 4) return examesConsultas['1-4'];
+            if (semana <= 8) return examesConsultas['5-8'];
+            if (semana <= 13) return examesConsultas['9-13'];
+            if (semana <= 17) return examesConsultas['14-17'];
+            if (semana <= 22) return examesConsultas['18-22'];
+            if (semana <= 26) return examesConsultas['23-26'];
+            if (semana <= 31) return examesConsultas['27-31'];
+            if (semana <= 35) return examesConsultas['32-35'];
+            return examesConsultas['36-40'];
+        }
+
+        // =====================================================
+        // RENDERIZAÇÃO
+        // =====================================================
+        function renderizarTabela() {
+            const tabela = document.getElementById('tabela');
+            tabela.innerHTML = conversao.map(item => `
+                <div class="tabela-linha tri${item.tri}" data-mes="${item.mes}">
+                    <div class="mes">${item.mes}º mês</div>
+                    <div class="semanas">
+                        <span>${formatarSemanasDias(item.inicioSem, item.inicioDia)}</span>
+                        <span class="seta">→</span>
+                        <span>${formatarSemanasDias(item.fimSem, item.fimDia)}</span>
+                    </div>
+                    <div class="tri">${item.tri}º tri</div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarExames(semana) {
+            const exames = obterExames(semana);
+            const section = document.getElementById('examesSection');
+            
+            section.innerHTML = `
+                <div class="exame-card tri${exames.tri}">
+                    <h4>${exames.titulo}</h4>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <strong style="font-size: 0.75rem; color: var(--texto-secundario);">📋 EXAMES:</strong>
+                        <ul class="exame-lista">
+                            ${exames.exames.map(e => `<li>${e}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-bottom: 8px;">
+                        <strong style="font-size: 0.75rem; color: var(--texto-secundario);">📅 CONSULTAS:</strong>
+                        <p style="font-size: 0.8rem; color: var(--texto); margin-top: 4px;">${exames.consultas}</p>
+                    </div>
+                    
+                    <div class="exame-nota">
+                        💡 ${exames.notas}
+                    </div>
+                </div>
+            `;
+        }
+
+        function atualizarInterface(semana) {
+            const dias = semana * 7;
+            const mes = encontrarMes(dias);
+            const tri = encontrarTrimestre(dias);
+            const { mesesCompletos, semanasExtras, diasExtras } = calcularMesesCompletos(dias);
+            const dadosMes = conversao[mes - 1];
+
+            // Atualizar resultado
+            document.getElementById('semanaDisplay').textContent = `${semana} semanas`;
+            document.getElementById('mesDisplay').textContent = `${mes}º mês`;
+            document.getElementById('trimestreBadge').textContent = `${tri}º trimestre`;
+            document.getElementById('trimestreBadge').className = `badge tri${tri}`;
+            document.getElementById('mesesCompletosDisplay').textContent = formatarMesesCompletos(mesesCompletos, semanasExtras, diasExtras);
+            document.getElementById('diasDisplay').textContent = `${dias} dias`;
+            document.getElementById('rangeDisplay').textContent = `${mes}º mês: ${formatarSemanasDias(dadosMes.inicioSem, dadosMes.inicioDia)} a ${formatarSemanasDias(dadosMes.fimSem, dadosMes.fimDia)}`;
+
+            // Atualizar classe do resultado
+            const resultado = document.getElementById('resultado');
+            resultado.className = `resultado tri${tri}`;
+
+            // Atualizar progresso
+            document.getElementById('progressoFill').style.width = `${(semana / 40) * 100}%`;
+
+            // Atualizar tabela (destacar mês atual)
+            document.querySelectorAll('.tabela-linha').forEach(linha => {
+                linha.classList.remove('ativo');
+                if (parseInt(linha.dataset.mes) === mes) {
+                    linha.classList.add('ativo');
+                }
+            });
+
+            // Atualizar exames
+            renderizarExames(semana);
+        }
+
+        // =====================================================
+        // INICIALIZAÇÃO
+        // =====================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderizarTabela();
+            
+            const slider = document.getElementById('semanaSlider');
+            slider.addEventListener('input', function() {
+                atualizarInterface(parseInt(this.value));
+            });
+            
+            // Inicializar com 20 semanas
+            atualizarInterface(20);
+        });
+    </script>
+</body>
+</html>
