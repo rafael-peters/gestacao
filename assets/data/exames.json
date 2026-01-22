@@ -1,0 +1,135 @@
+{
+  "versao": "1.0",
+  "ultimaAtualizacao": "2025-01-21",
+  "autor": "Dr. Rafael Peters",
+  "periodos": {
+    "1-4": {
+      "titulo": "Semanas 1-4",
+      "emoji": "🌱",
+      "trimestre": 1,
+      "exames": [
+        { "nome": "Teste de gravidez (beta-hCG)", "destaque": true },
+        { "nome": "Início do ácido fólico 5mg/dia", "destaque": true }
+      ],
+      "consultas": "Primeira consulta ao confirmar gravidez",
+      "observacao": "Período de implantação. Evite medicamentos sem orientação médica.",
+      "linkAgendamento": null
+    },
+    "5-8": {
+      "titulo": "Semanas 5-8",
+      "emoji": "💗",
+      "trimestre": 1,
+      "exames": [
+        { "nome": "Ultrassom transvaginal", "destaque": true },
+        { "nome": "Tipagem sanguínea e Rh" },
+        { "nome": "Hemograma completo" },
+        { "nome": "Glicemia de jejum" },
+        { "nome": "Sorologias (HIV, Sífilis, Hepatites B e C, Toxoplasmose, Rubéola)" },
+        { "nome": "Urina tipo 1 e urocultura" },
+        { "nome": "TSH" },
+        { "nome": "Vitamina D (opcional)" }
+      ],
+      "consultas": "Consulta pré-natal mensal",
+      "observacao": "Batimentos cardíacos visíveis a partir de 6 semanas.",
+      "linkAgendamento": null
+    },
+    "9-13": {
+      "titulo": "Semanas 9-13",
+      "emoji": "✨",
+      "trimestre": 1,
+      "exames": [
+        { "nome": "Morfológico de 1º trimestre (11-14 sem)", "destaque": true },
+        { "nome": "Translucência Nucal (TN)", "destaque": true },
+        { "nome": "Rastreamento bioquímico (PAPP-A, beta-hCG livre)" },
+        { "nome": "NIPT - Teste pré-natal não invasivo (opcional)" },
+        { "nome": "Biópsia de vilo corial (se indicado)" }
+      ],
+      "consultas": "Consulta pré-natal mensal",
+      "observacao": "Melhor período para rastreamento de cromossomopatias (Síndrome de Down, etc).",
+      "linkAgendamento": null
+    },
+    "14-17": {
+      "titulo": "Semanas 14-17",
+      "emoji": "🎵",
+      "trimestre": 2,
+      "exames": [
+        { "nome": "Ultrassom obstétrico", "destaque": false },
+        { "nome": "Repetir sorologias negativas (Toxo, Rubéola)" }
+      ],
+      "consultas": "Consulta pré-natal mensal",
+      "observacao": "Período de maior bem-estar. Início da percepção dos movimentos fetais.",
+      "linkAgendamento": null
+    },
+    "18-22": {
+      "titulo": "Semanas 18-22",
+      "emoji": "❤️",
+      "trimestre": 2,
+      "exames": [
+        { "nome": "Morfológico de 2º trimestre (20-24 sem)", "destaque": true },
+        { "nome": "Avaliação anatômica completa do feto", "destaque": true },
+        { "nome": "Ecocardiografia fetal (se indicada)" },
+        { "nome": "Amniocentese (se indicada)" },
+        { "nome": "Avaliação do colo uterino" }
+      ],
+      "consultas": "Consulta pré-natal mensal",
+      "observacao": "Período ideal para visualizar o sexo do bebê e avaliar toda a anatomia fetal.",
+      "linkAgendamento": null
+    },
+    "23-27": {
+      "titulo": "Semanas 23-27",
+      "emoji": "🧠",
+      "trimestre": 2,
+      "exames": [
+        { "nome": "TOTG 75g - Teste de tolerância à glicose (24-28 sem)", "destaque": true },
+        { "nome": "Hemograma de controle" },
+        { "nome": "Repetir sorologias negativas" },
+        { "nome": "Coombs indireto (se Rh negativo)" }
+      ],
+      "consultas": "Consulta pré-natal quinzenal ou mensal",
+      "observacao": "Rastreamento de diabetes gestacional. Atenção ao ganho de peso.",
+      "linkAgendamento": null
+    },
+    "28-31": {
+      "titulo": "Semanas 28-31",
+      "emoji": "👁️",
+      "trimestre": 3,
+      "exames": [
+        { "nome": "Ultrassom de 3º trimestre", "destaque": true },
+        { "nome": "Vacina dTpa (a partir de 20 semanas)", "destaque": true },
+        { "nome": "Imunoglobulina anti-D (se Rh negativo)" }
+      ],
+      "consultas": "Consulta pré-natal quinzenal",
+      "observacao": "Atenção para sinais de parto prematuro. Bebê já tem chance de sobreviver fora do útero.",
+      "linkAgendamento": null
+    },
+    "32-35": {
+      "titulo": "Semanas 32-35",
+      "emoji": "🫁",
+      "trimestre": 3,
+      "exames": [
+        { "nome": "Ultrassom com Doppler", "destaque": true },
+        { "nome": "Cardiotocografia (se indicada)" },
+        { "nome": "Cultura para Streptococcus B (GBS) - 35-37 sem", "destaque": true },
+        { "nome": "Repetir sorologias (HIV, Sífilis, Hepatites)" },
+        { "nome": "Hemograma e coagulograma pré-parto" }
+      ],
+      "consultas": "Consulta pré-natal quinzenal",
+      "observacao": "Avaliação da posição fetal, líquido amniótico e bem-estar fetal.",
+      "linkAgendamento": null
+    },
+    "36-40": {
+      "titulo": "Semanas 36-40",
+      "emoji": "👶",
+      "trimestre": 3,
+      "exames": [
+        { "nome": "Ultrassom (peso estimado e posição fetal)", "destaque": true },
+        { "nome": "Cardiotocografia semanal" },
+        { "nome": "Avaliação do colo uterino (Bishop)" },
+        { "nome": "Monitoramento fetal" }
+      ],
+      "consultas": "Consulta pré-natal semanal",
+      "observacao": "Reta final! Fique atenta: contrações regulares, perda do tampão mucoso, ruptura da bolsa.",
+      "linkAgendamento": null
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "descricao": "Tabela de conversão baseada em 280 dias ÷ 9 meses = ~31.11 dias/mês",
+  "diasGestacao": 280,
+  "diasPorMes": 31.111,
+  
+  "meses": [
+    {
+      "mes": 1,
+      "diasAcumulados": 31,
+      "semInicio": 0,
+      "diaInicio": 0,
+      "semFim": 4,
+      "diaFim": 3,
+      "trimestre": 1
+    },
+    {
+      "mes": 2,
+      "diasAcumulados": 62,
+      "semInicio": 4,
+      "diaInicio": 3,
+      "semFim": 8,
+      "diaFim": 6,
+      "trimestre": 1
+    },
+    {
+      "mes": 3,
+      "diasAcumulados": 93,
+      "semInicio": 8,
+      "diaInicio": 6,
+      "semFim": 13,
+      "diaFim": 2,
+      "trimestre": 1
+    },
+    {
+      "mes": 4,
+      "diasAcumulados": 124,
+      "semInicio": 13,
+      "diaInicio": 2,
+      "semFim": 17,
+      "diaFim": 5,
+      "trimestre": 2
+    },
+    {
+      "mes": 5,
+      "diasAcumulados": 155,
+      "semInicio": 17,
+      "diaInicio": 5,
+      "semFim": 22,
+      "diaFim": 1,
+      "trimestre": 2
+    },
+    {
+      "mes": 6,
+      "diasAcumulados": 186,
+      "semInicio": 22,
+      "diaInicio": 1,
+      "semFim": 26,
+      "diaFim": 4,
+      "trimestre": 2
+    },
+    {
+      "mes": 7,
+      "diasAcumulados": 217,
+      "semInicio": 26,
+      "diaInicio": 4,
+      "semFim": 31,
+      "diaFim": 0,
+      "trimestre": 3
+    },
+    {
+      "mes": 8,
+      "diasAcumulados": 248,
+      "semInicio": 31,
+      "diaInicio": 0,
+      "semFim": 35,
+      "diaFim": 3,
+      "trimestre": 3
+    },
+    {
+      "mes": 9,
+      "diasAcumulados": 280,
+      "semInicio": 35,
+      "diaInicio": 3,
+      "semFim": 40,
+      "diaFim": 0,
+      "trimestre": 3
+    }
+  ],
+  
+  "trimestres": [
+    {
+      "numero": 1,
+      "nome": "1º Trimestre",
+      "diasFim": 93,
+      "semanaFim": 13,
+      "cor": "rosa",
+      "hexCor": "#EC4899",
+      "descricao": "Formação dos órgãos"
+    },
+    {
+      "numero": 2,
+      "nome": "2º Trimestre",
+      "diasFim": 186,
+      "semanaFim": 27,
+      "cor": "roxo",
+      "hexCor": "#8B5CF6",
+      "descricao": "Crescimento e desenvolvimento"
+    },
+    {
+      "numero": 3,
+      "nome": "3º Trimestre",
+      "diasFim": 280,
+      "semanaFim": 40,
+      "cor": "azul",
+      "hexCor": "#3B82F6",
+      "descricao": "Maturação e preparação para o parto"
+    }
+  ]
+}
