@@ -6,8 +6,8 @@
 /* ===== HEADER ===== */
 .header {
     text-align: center;
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-lg) 0;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
 }
 
 .header h1 {
@@ -35,8 +35,8 @@
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
     border: 1px solid rgba(139, 92, 246, 0.2);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .instrucoes-box h2 {
@@ -69,7 +69,7 @@
 
 /* ===== SEÇÃO DE ENTRADA DE DADOS ===== */
 .entrada-section {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
 }
 
 .metodo-selector {
@@ -174,55 +174,14 @@
     margin-bottom: 0;
 }
 
-/* ===== BOTÃO CALCULAR ===== */
-.calcular-section {
-    text-align: center;
-    margin: var(--spacing-xl) 0;
+/* ===== SLIDER INTEGRADO ===== */
+.slider-integrado {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--borda);
 }
 
-.btn-calcular {
-    padding: 16px 48px;
-    font-size: var(--text-lg);
-    gap: var(--spacing-md);
-}
-
-.btn-calcular .icon {
-    font-size: 1.3em;
-}
-
-/* ===== DIVISOR "OU" ===== */
-.divisor-ou {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-lg);
-    margin: var(--spacing-xl) 0;
-}
-
-.divisor-ou::before,
-.divisor-ou::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--borda), transparent);
-}
-
-.divisor-ou span {
-    color: var(--texto-secundario);
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/* ===== SLIDER DE SEMANAS ===== */
-.slider-section {
-    padding: var(--spacing-xl);
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--borda);
-    margin-bottom: var(--spacing-xl);
-}
-
-.slider-header {
+.slider-controles {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -231,17 +190,35 @@
     gap: var(--spacing-md);
 }
 
-.slider-titulo {
-    display: flex;
-    align-items: center;
+.btn-calcular {
+    padding: 14px 28px;
+    font-size: var(--text-base);
     gap: var(--spacing-sm);
-    font-weight: 600;
-    color: var(--roxo);
+}
+
+.btn-calcular .icon {
+    font-size: 1.2em;
+}
+
+@media (max-width: 600px) {
+    .slider-controles {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-calcular {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .slider-valores {
+        justify-content: center;
+    }
 }
 
 .slider-valores {
     display: flex;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     align-items: center;
 }
 
@@ -260,7 +237,7 @@
 }
 
 .slider-valor-box input {
-    width: 60px;
+    width: 55px;
     padding: 8px;
     text-align: center;
     background: transparent;
@@ -272,7 +249,7 @@
 }
 
 .slider-container {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .slider {
@@ -334,8 +311,8 @@
 .main-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
 }
 
 @media (max-width: 1100px) {
@@ -377,10 +354,11 @@
 }
 
 .resultado-semanas {
-    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
     font-weight: 800;
     margin-bottom: var(--spacing-sm);
-    line-height: 1;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 .tri1 .resultado-semanas { color: var(--rosa); }
@@ -427,6 +405,11 @@
     font-size: var(--text-sm);
 }
 
+.resultado-mes-badge {
+    font-weight: 600;
+    color: var(--texto);
+}
+
 .resultado-range {
     font-family: var(--font-mono);
     color: var(--texto-secundario);
@@ -444,6 +427,31 @@
 .resultado-explicacao strong {
     color: var(--texto);
     font-style: normal;
+}
+
+/* Info da Semana */
+.resultado-info-semana {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.info-semana-titulo {
+    font-weight: 700;
+    color: var(--roxo);
+    font-size: var(--text-base);
+    margin-bottom: 4px;
+}
+
+.info-semana-titulo::before {
+    content: "🎯 ";
+}
+
+.info-semana-descricao {
+    font-size: var(--text-sm);
+    color: var(--texto-secundario);
 }
 
 /* ===== LINHA DO TEMPO ===== */
@@ -561,15 +569,24 @@
     color: var(--texto-secundario);
 }
 
-.mes-box .semanas {
+.mes-box .semanas-range {
     font-size: var(--text-xs);
     margin-top: 4px;
     font-family: var(--font-mono);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.3;
 }
 
-.mes-box.tri1 .semanas { color: var(--rosa-claro); }
-.mes-box.tri2 .semanas { color: var(--roxo-claro); }
-.mes-box.tri3 .semanas { color: var(--azul-claro); }
+.mes-box .sem-separador {
+    font-size: 0.65rem;
+    opacity: 0.6;
+}
+
+.mes-box.tri1 .semanas-range { color: var(--rosa-claro); }
+.mes-box.tri2 .semanas-range { color: var(--roxo-claro); }
+.mes-box.tri3 .semanas-range { color: var(--azul-claro); }
 
 /* Barra de progresso */
 .progresso-container {

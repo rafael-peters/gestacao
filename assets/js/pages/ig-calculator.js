@@ -45,12 +45,17 @@ document.addEventListener('DOMContentLoaded', async function() {
  */
 async function carregarExames() {
     // Primeiro, tentar carregar do localStorage (personalizações do usuário)
-    const salvo = localStorage.getItem('examesGestacaoV2');
-    if (salvo) {
-        estado.exames = JSON.parse(salvo);
-        return;
+    try {
+        const salvo = localStorage.getItem('examesGestacaoV2');
+        if (salvo) {
+            estado.exames = JSON.parse(salvo);
+            return;
+        }
+    } catch (error) {
+        console.warn('Erro ao ler localStorage, usando dados padrão:', error);
+        localStorage.removeItem('examesGestacaoV2');
     }
-    
+
     // Se não houver, carregar do arquivo JSON
     try {
         const response = await fetch('./assets/data/exames.json');
@@ -92,7 +97,9 @@ function configurarEventos() {
     if (sliderSemanas) {
         sliderSemanas.addEventListener('input', (e) => {
             estado.semanas = parseInt(e.target.value);
+            estado.dias = 0; // Resetar dias ao mover slider
             estado.metodo = 'slider';
+            resetarMetodosCalculo(); // Resetar cards DUM/DPP/US
             calcularEAtualizar();
         });
     }
@@ -164,84 +171,134 @@ function configurarEventos() {
  */
 function calcularPorMetodo() {
     const Calc = window.CalculosGestacionais;
-    
+    limparValidacaoCampos();
+
     switch (estado.metodo) {
         case 'dum': {
-            const dum = document.getElementById('inputDUM')?.value;
+            const inputDUM = document.getElementById('inputDUM');
+            const dum = inputDUM?.value;
             if (!dum) {
+                marcarCampoErro(inputDUM);
                 mostrarErro('Por favor, informe a data da última menstruação.');
                 return;
             }
-            
+
             const validacao = Calc.validarDUM(dum);
             if (!validacao.valido) {
+                marcarCampoErro(inputDUM);
                 mostrarErro(validacao.mensagem);
                 return;
             }
-            
+
+            marcarCampoValido(inputDUM);
             const dpp = Calc.calcularDPP('dum', { dum });
             const diasGestacao = Calc.calcularDiasGestacao(dpp);
             const { semanas, dias } = Calc.diasParaSemanasEDias(diasGestacao);
-            
+
             estado.semanas = semanas;
             estado.dias = dias;
             break;
         }
-        
+
         case 'dpp': {
-            const dpp = document.getElementById('inputDPP')?.value;
+            const inputDPP = document.getElementById('inputDPP');
+            const dpp = inputDPP?.value;
             if (!dpp) {
+                marcarCampoErro(inputDPP);
                 mostrarErro('Por favor, informe a data provável do parto.');
                 return;
             }
-            
+
             const validacao = Calc.validarDPP(dpp);
             if (!validacao.valido) {
+                marcarCampoErro(inputDPP);
                 mostrarErro(validacao.mensagem);
                 return;
             }
-            
+
+            marcarCampoValido(inputDPP);
             const diasGestacao = Calc.calcularDiasGestacao(Calc.parseData(dpp));
             const { semanas, dias } = Calc.diasParaSemanasEDias(diasGestacao);
-            
+
             estado.semanas = semanas;
             estado.dias = dias;
             break;
         }
-        
+
         case 'ultrassom': {
-            const dataExame = document.getElementById('inputDataExame')?.value;
-            const semExame = parseInt(document.getElementById('inputSemExame')?.value) || 0;
-            const diasExame = parseInt(document.getElementById('inputDiasExame')?.value) || 0;
-            
+            const inputDataExame = document.getElementById('inputDataExame');
+            const inputSemExame = document.getElementById('inputSemExame');
+            const inputDiasExame = document.getElementById('inputDiasExame');
+
+            const dataExame = inputDataExame?.value;
+            const semExame = parseInt(inputSemExame?.value) || 0;
+            const diasExame = parseInt(inputDiasExame?.value) || 0;
+
             if (!dataExame) {
+                marcarCampoErro(inputDataExame);
                 mostrarErro('Por favor, informe a data do exame.');
                 return;
             }
-            
+
             const validacao = Calc.validarIG(semExame, diasExame);
             if (!validacao.valido) {
+                marcarCampoErro(inputSemExame);
+                marcarCampoErro(inputDiasExame);
                 mostrarErro(validacao.mensagem);
                 return;
             }
-            
-            const dpp = Calc.calcularDPP('ultrassom', { 
-                dataExame, 
-                semanas: semExame, 
-                dias: diasExame 
+
+            marcarCampoValido(inputDataExame);
+            marcarCampoValido(inputSemExame);
+            marcarCampoValido(inputDiasExame);
+
+            const dpp = Calc.calcularDPP('ultrassom', {
+                dataExame,
+                semanas: semExame,
+                dias: diasExame
             });
-            
+
             const diasGestacao = Calc.calcularDiasGestacao(dpp);
             const { semanas, dias } = Calc.diasParaSemanasEDias(diasGestacao);
-            
+
             estado.semanas = Math.max(1, semanas);
             estado.dias = dias;
             break;
         }
     }
-    
+
     calcularEAtualizar();
     limparErro();
+}
+
+/**
+ * Marca um campo como erro
+ */
+function marcarCampoErro(input) {
+    if (input) {
+        input.classList.remove('valid');
+        input.classList.add('error');
+    }
+}
+
+/**
+ * Marca um campo como válido
+ */
+function marcarCampoValido(input) {
+    if (input) {
+        input.classList.remove('error');
+        input.classList.add('valid');
+    }
+}
+
+/**
+ * Limpa validação visual de todos os campos
+ */
+function limparValidacaoCampos() {
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        input.classList.remove('error', 'valid');
+    });
 }
 
 /**
@@ -296,11 +353,16 @@ function renderizarResultado() {
     // Meses comerciais completos
     const comercialDisplay = document.getElementById('comercialDisplay');
     if (comercialDisplay) {
-        comercialDisplay.textContent = Fmt.formatarMesesCompletos(
-            r.mesesCompletos, 
-            r.semanasExtras, 
-            r.diasExtras
-        );
+        // Caso especial: 40 semanas exatas = 9 meses (para ficar bonito)
+        if (r.totalDias === 280) {
+            comercialDisplay.textContent = '9 meses';
+        } else {
+            comercialDisplay.textContent = Fmt.formatarMesesCompletos(
+                r.mesesCompletos,
+                r.semanasExtras,
+                r.diasExtras
+            );
+        }
     }
     
     // Total de dias
@@ -316,16 +378,36 @@ function renderizarResultado() {
         trimestreBadge.className = `badge tri${r.trimestre}`;
     }
     
-    // Range do mês
+    // Mês badge
+    const mesBadge = document.getElementById('mesBadge');
+    if (mesBadge) {
+        mesBadge.textContent = Fmt.formatarMes(r.mesAtual);
+    }
+
+    // Range do mês (sem a palavra "Semanas")
     const rangeDisplay = document.getElementById('rangeDisplay');
     if (rangeDisplay && r.dadosMes) {
-        rangeDisplay.textContent = `Semanas ${Fmt.formatarRangeMes(r.dadosMes)}`;
+        rangeDisplay.textContent = Fmt.formatarRangeMes(r.dadosMes);
     }
     
     // Explicação
     const explicacao = document.getElementById('explicacao');
     if (explicacao) {
-        explicacao.innerHTML = Fmt.gerarExplicacao(r.mesAtual, r.mesesCompletos);
+        // Caso especial: 40 semanas exatas
+        if (r.totalDias === 280) {
+            explicacao.innerHTML = 'Completou <strong>9 meses</strong> de gestação. Data provável do parto!';
+        } else {
+            explicacao.innerHTML = Fmt.gerarExplicacao(r.mesAtual, r.mesesCompletos);
+        }
+    }
+
+    // Info da semana atual
+    const infoSemana = Fmt.infoSemana(r.semanas);
+    const infoSemanaTitulo = document.getElementById('infoSemanaTitulo');
+    const infoSemanaDescricao = document.getElementById('infoSemanaDescricao');
+    if (infoSemanaTitulo && infoSemanaDescricao && infoSemana.titulo) {
+        infoSemanaTitulo.textContent = infoSemana.titulo;
+        infoSemanaDescricao.textContent = infoSemana.descricao;
     }
     
     // Barra de progresso
@@ -357,13 +439,20 @@ function renderizarTimeline() {
     // Grid de meses
     const mesesGrid = document.getElementById('mesesGrid');
     if (mesesGrid) {
-        mesesGrid.innerHTML = r.tabelaMeses.map(item => `
+        mesesGrid.innerHTML = r.tabelaMeses.map(item => {
+            const inicio = Fmt.formatarSemanasEDias(item.semInicio, item.diaInicio, true);
+            const fim = Fmt.formatarSemanasEDias(item.semFim, item.diaFim, true);
+            return `
             <div class="mes-box tri${item.tri} ${r.mesAtual === item.mes ? 'ativo' : ''}">
                 <div class="numero">${item.mes}º</div>
                 <div class="label">mês</div>
-                <div class="semanas">${item.semInicio}-${item.semFim}</div>
+                <div class="semanas-range">
+                    <span class="sem-inicio">${inicio}</span>
+                    <span class="sem-separador">a</span>
+                    <span class="sem-fim">${fim}</span>
+                </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 }
 
@@ -466,8 +555,14 @@ function atualizarInputs() {
 function toggleEditor() {
     estado.editorAberto = !estado.editorAberto;
     const painel = document.getElementById('editorPanel');
+    const btnEditor = document.getElementById('btnEditor');
+
     if (painel) {
         painel.classList.toggle('ativo', estado.editorAberto);
+    }
+
+    if (btnEditor) {
+        btnEditor.setAttribute('aria-expanded', estado.editorAberto);
     }
 }
 
@@ -537,7 +632,7 @@ function resetarExames() {
 
 function atualizarVisibilidadeCampos() {
     const metodos = ['dum', 'dpp', 'ultrassom'];
-    
+
     metodos.forEach(m => {
         const campos = document.getElementById(`campos-${m}`);
         if (campos) {
@@ -546,14 +641,37 @@ function atualizarVisibilidadeCampos() {
     });
 }
 
+/**
+ * Reseta os cards de método (DUM/DPP/US) ao usar o slider
+ */
+function resetarMetodosCalculo() {
+    // Desmarcar todos os radio buttons
+    const radios = document.querySelectorAll('input[name="metodo"]');
+    radios.forEach(radio => {
+        radio.checked = false;
+    });
+
+    // Esconder todos os campos
+    const metodos = ['dum', 'dpp', 'ultrassom'];
+    metodos.forEach(m => {
+        const campos = document.getElementById(`campos-${m}`);
+        if (campos) {
+            campos.style.display = 'none';
+        }
+    });
+
+    // Limpar validação visual
+    limparValidacaoCampos();
+    limparErro();
+}
+
 function mostrarErro(mensagem) {
     const erroBox = document.getElementById('erroBox');
     if (erroBox) {
         erroBox.textContent = mensagem;
         erroBox.style.display = 'block';
-    } else {
-        alert(mensagem);
     }
+    mostrarToast(mensagem, 'error');
 }
 
 function limparErro() {
@@ -564,8 +682,53 @@ function limparErro() {
 }
 
 function mostrarSucesso(mensagem) {
-    // Poderia usar um toast, mas por simplicidade uso alert
-    alert(mensagem);
+    mostrarToast(mensagem, 'success');
+}
+
+/**
+ * Sistema de Toast Notifications
+ * @param {string} mensagem - Mensagem a exibir
+ * @param {string} tipo - 'success', 'error', 'warning', 'info'
+ * @param {number} duracao - Duração em ms (default: 4000)
+ */
+function mostrarToast(mensagem, tipo = 'info', duracao = 4000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const icones = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.innerHTML = `
+        <span class="toast-icon" aria-hidden="true">${icones[tipo]}</span>
+        <span class="toast-message">${mensagem}</span>
+        <button class="toast-close" aria-label="Fechar notificação">&times;</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Fechar ao clicar no X
+    const btnClose = toast.querySelector('.toast-close');
+    btnClose.addEventListener('click', () => fecharToast(toast));
+
+    // Auto-fechar após duração
+    setTimeout(() => fecharToast(toast), duracao);
+}
+
+function fecharToast(toast) {
+    if (!toast || toast.classList.contains('hiding')) return;
+
+    toast.classList.add('hiding');
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 200);
 }
 
 // =====================================================
