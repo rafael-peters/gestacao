@@ -390,15 +390,14 @@ function renderizarResultado() {
         rangeDisplay.textContent = Fmt.formatarRangeMes(r.dadosMes);
     }
     
-    // Explicação
+    // Explicação - Data Provável do Parto
     const explicacao = document.getElementById('explicacao');
     if (explicacao) {
-        // Caso especial: 40 semanas exatas
-        if (r.totalDias === 280) {
-            explicacao.innerHTML = 'Completou <strong>9 meses</strong> de gestação. Data provável do parto!';
-        } else {
-            explicacao.innerHTML = Fmt.gerarExplicacao(r.mesAtual, r.mesesCompletos);
-        }
+        const Calc = window.CalculosGestacionais;
+        const diasRestantes = 280 - r.totalDias;
+        const dppEstimada = Calc.adicionarDias(new Date(), diasRestantes);
+        const dataFormatada = Calc.formatarData(dppEstimada);
+        explicacao.innerHTML = `Data provável do parto estimada: <strong>${dataFormatada}</strong>`;
     }
 
     // Info da semana atual
