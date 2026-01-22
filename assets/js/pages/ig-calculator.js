@@ -69,20 +69,125 @@ async function carregarExames() {
 }
 
 /**
- * Retorna dados padrão de exames (fallback)
+ * Retorna dados padrão de exames (fallback para quando JSON não carrega)
  */
 function getExamesPadrao() {
     return {
+        '1-4': {
+            titulo: 'Semanas 1-4',
+            emoji: '🌱',
+            trimestre: 1,
+            exames: [
+                { nome: 'Teste de gravidez (beta-hCG)', destaque: true },
+                { nome: 'Início do ácido fólico 5mg/dia', destaque: true }
+            ],
+            consultas: 'Primeira consulta ao confirmar gravidez',
+            observacao: 'Período de implantação. Evite medicamentos sem orientação médica.'
+        },
+        '5-8': {
+            titulo: 'Semanas 5-8',
+            emoji: '💗',
+            trimestre: 1,
+            exames: [
+                { nome: 'Ultrassom transvaginal', destaque: true },
+                { nome: 'Tipagem sanguínea e Rh' },
+                { nome: 'Hemograma completo' },
+                { nome: 'Glicemia de jejum' },
+                { nome: 'Sorologias (HIV, Sífilis, Hepatites B e C, Toxoplasmose, Rubéola)' },
+                { nome: 'Urina tipo 1 e urocultura' },
+                { nome: 'TSH' }
+            ],
+            consultas: 'Consulta pré-natal mensal',
+            observacao: 'Batimentos cardíacos visíveis a partir de 6 semanas.'
+        },
+        '9-13': {
+            titulo: 'Semanas 9-13',
+            emoji: '✨',
+            trimestre: 1,
+            exames: [
+                { nome: 'Morfológico de 1º trimestre (11-14 sem)', destaque: true },
+                { nome: 'Translucência Nucal (TN)', destaque: true },
+                { nome: 'Rastreamento bioquímico (PAPP-A, beta-hCG livre)' },
+                { nome: 'NIPT - Teste pré-natal não invasivo (opcional)' }
+            ],
+            consultas: 'Consulta pré-natal mensal',
+            observacao: 'Melhor período para rastreamento de cromossomopatias.'
+        },
+        '14-17': {
+            titulo: 'Semanas 14-17',
+            emoji: '🎵',
+            trimestre: 2,
+            exames: [
+                { nome: 'Ultrassom obstétrico' },
+                { nome: 'Repetir sorologias negativas (Toxo, Rubéola)' }
+            ],
+            consultas: 'Consulta pré-natal mensal',
+            observacao: 'Período de maior bem-estar. Início da percepção dos movimentos fetais.'
+        },
         '18-22': {
             titulo: 'Semanas 18-22',
             emoji: '❤️',
             trimestre: 2,
             exames: [
-                { nome: 'Morfológico de 2º trimestre', destaque: true },
-                { nome: 'Ecocardiografia fetal' }
+                { nome: 'Morfológico de 2º trimestre (20-24 sem)', destaque: true },
+                { nome: 'Avaliação anatômica completa do feto', destaque: true },
+                { nome: 'Ecocardiografia fetal (se indicada)' },
+                { nome: 'Avaliação do colo uterino' }
             ],
             consultas: 'Consulta pré-natal mensal',
-            observacao: 'Período ideal para ver o sexo do bebê.'
+            observacao: 'Período ideal para visualizar o sexo do bebê e avaliar toda a anatomia fetal.'
+        },
+        '23-27': {
+            titulo: 'Semanas 23-27',
+            emoji: '🧠',
+            trimestre: 2,
+            exames: [
+                { nome: 'TOTG 75g - Teste de tolerância à glicose (24-28 sem)', destaque: true },
+                { nome: 'Hemograma de controle' },
+                { nome: 'Repetir sorologias negativas' },
+                { nome: 'Coombs indireto (se Rh negativo)' }
+            ],
+            consultas: 'Consulta pré-natal quinzenal ou mensal',
+            observacao: 'Rastreamento de diabetes gestacional. Atenção ao ganho de peso.'
+        },
+        '28-31': {
+            titulo: 'Semanas 28-31',
+            emoji: '👁️',
+            trimestre: 3,
+            exames: [
+                { nome: 'Ultrassom de 3º trimestre', destaque: true },
+                { nome: 'Vacina dTpa (a partir de 20 semanas)', destaque: true },
+                { nome: 'Imunoglobulina anti-D (se Rh negativo)' }
+            ],
+            consultas: 'Consulta pré-natal quinzenal',
+            observacao: 'Atenção para sinais de parto prematuro.'
+        },
+        '32-35': {
+            titulo: 'Semanas 32-35',
+            emoji: '🫁',
+            trimestre: 3,
+            exames: [
+                { nome: 'Ultrassom com Doppler', destaque: true },
+                { nome: 'Cardiotocografia (se indicada)' },
+                { nome: 'Cultura para Streptococcus B (GBS) - 35-37 sem', destaque: true },
+                { nome: 'Repetir sorologias (HIV, Sífilis, Hepatites)' },
+                { nome: 'Hemograma e coagulograma pré-parto' }
+            ],
+            consultas: 'Consulta pré-natal quinzenal',
+            observacao: 'Avaliação da posição fetal, líquido amniótico e bem-estar fetal.'
+        },
+        '36-40': {
+            titulo: 'Semanas 36-40',
+            emoji: '👶',
+            trimestre: 3,
+            exames: [
+                { nome: 'Ultrassom (peso estimado e posição fetal)', destaque: true },
+                { nome: 'Cardiotocografia semanal' },
+                { nome: 'Avaliação do colo uterino (Bishop)' },
+                { nome: 'Monitoramento fetal' }
+            ],
+            consultas: 'Consulta pré-natal semanal',
+            observacao: 'Reta final! Fique atenta: contrações regulares, perda do tampão mucoso, ruptura da bolsa.'
         }
     };
 }
@@ -343,32 +448,21 @@ function renderizarResultado() {
     if (semanaDisplay) {
         semanaDisplay.textContent = Fmt.formatarSemanasEDias(r.semanas, r.dias, false);
     }
-    
-    // Mês de gestação
-    const mesDisplay = document.getElementById('mesDisplay');
-    if (mesDisplay) {
-        mesDisplay.textContent = Fmt.formatarMes(r.mesAtual);
-    }
-    
-    // Meses comerciais completos
+
+    // Dias = Meses comerciais completos
     const comercialDisplay = document.getElementById('comercialDisplay');
     if (comercialDisplay) {
         // Caso especial: 40 semanas exatas = 9 meses (para ficar bonito)
         if (r.totalDias === 280) {
-            comercialDisplay.textContent = '9 meses';
+            comercialDisplay.textContent = '280 dias = 9 meses';
         } else {
-            comercialDisplay.textContent = Fmt.formatarMesesCompletos(
+            const mesesTexto = Fmt.formatarMesesCompletos(
                 r.mesesCompletos,
                 r.semanasExtras,
                 r.diasExtras
             );
+            comercialDisplay.textContent = `${r.totalDias} dias = ${mesesTexto}`;
         }
-    }
-    
-    // Total de dias
-    const diasDisplay = document.getElementById('diasDisplay');
-    if (diasDisplay) {
-        diasDisplay.textContent = `${r.totalDias} dias`;
     }
     
     // Badge do trimestre
@@ -400,15 +494,6 @@ function renderizarResultado() {
         explicacao.innerHTML = `Data provável do parto estimada: <strong>${dataFormatada}</strong>`;
     }
 
-    // Info da semana atual
-    const infoSemana = Fmt.infoSemana(r.semanas);
-    const infoSemanaTitulo = document.getElementById('infoSemanaTitulo');
-    const infoSemanaDescricao = document.getElementById('infoSemanaDescricao');
-    if (infoSemanaTitulo && infoSemanaDescricao && infoSemana.titulo) {
-        infoSemanaTitulo.textContent = infoSemana.titulo;
-        infoSemanaDescricao.textContent = infoSemana.descricao;
-    }
-    
     // Barra de progresso
     const progressoFill = document.getElementById('progressoFill');
     if (progressoFill) {
@@ -460,59 +545,73 @@ function renderizarTimeline() {
  */
 function renderizarExames() {
     const Calc = window.CalculosGestacionais;
+    const Fmt = window.FormatacaoGestacional;
+
+    if (!Calc || !Fmt || !estado.exames) return;
+
     const periodo = Calc.obterPeriodoExame(estado.semanas);
-    const dados = estado.exames?.[periodo];
-    
+    const dados = estado.exames[periodo];
+
     if (!dados) return;
-    
+
     const examesGrid = document.getElementById('examesGrid');
     if (!examesGrid) return;
-    
+
+    // Info da semana atual
+    const infoSemana = Fmt.infoSemana(estado.semanas);
+
     // Formatar lista de exames
     const formatarExame = (e) => {
         if (typeof e === 'string') {
             const destaque = e.startsWith('*');
             const nome = destaque ? e.substring(1) : e;
-            return destaque 
-                ? `<span class="destaque">${nome}</span>` 
+            return destaque
+                ? `<span class="destaque">${nome}</span>`
                 : nome;
         }
-        return e.destaque 
-            ? `<span class="destaque">${e.nome}</span>` 
+        return e.destaque
+            ? `<span class="destaque">${e.nome}</span>`
             : e.nome;
     };
-    
-    const listaExames = Array.isArray(dados.exames) 
-        ? dados.exames 
+
+    const listaExames = Array.isArray(dados.exames)
+        ? dados.exames
         : [];
-    
+
     examesGrid.innerHTML = `
         <div class="exame-display tri${dados.trimestre}">
             <h4>${dados.emoji || '🩺'} ${dados.titulo}</h4>
-            
+
+            ${infoSemana.titulo ? `
+            <div class="info-semana-box" style="background: var(--fundo-secundario); padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                <div style="font-weight: 600; color: var(--texto);">💡 ${infoSemana.titulo}</div>
+                <div style="font-size: 0.9rem; color: var(--texto-secundario); margin-top: 4px;">${infoSemana.descricao}</div>
+            </div>
+            ` : ''}
+
             <div class="exame-categoria">
                 <div class="exame-categoria-titulo">📋 Exames Recomendados</div>
                 <ul class="exame-lista">
                     ${listaExames.map(e => `<li>${formatarExame(e)}</li>`).join('')}
                 </ul>
             </div>
-            
+
             <div class="exame-categoria">
                 <div class="exame-categoria-titulo">📅 Consultas</div>
                 <p style="font-size: 0.9rem; color: var(--texto);">${dados.consultas || 'Consulta pré-natal conforme orientação médica'}</p>
             </div>
-            
+
             ${dados.observacao ? `<div class="exame-nota">${dados.observacao}</div>` : ''}
         </div>
-        
+
         <div class="exame-display tri${dados.trimestre}">
             <h4>📌 Informação Importante</h4>
             <p style="font-size: 0.9rem; color: var(--texto-secundario); line-height: 1.7;">
-                Os exames listados são <strong style="color: var(--texto);">recomendações gerais</strong> 
+                Os exames listados são <strong style="color: var(--texto);">recomendações gerais</strong>
                 baseadas nas diretrizes obstétricas brasileiras.
             </p>
             <p style="font-size: 0.9rem; color: var(--texto-secundario); line-height: 1.7; margin-top: 12px;">
-                Seu médico pode solicitar exames adicionais ou em momentos diferentes, 
+                Seu médico pode solicitar exames adicionais ou em momentos diferentes,
                 de acordo com suas <strong style="color: var(--texto);">necessidades específicas</strong>.
             </p>
             <div class="exame-nota" style="margin-top: 16px;">
@@ -520,7 +619,7 @@ function renderizarExames() {
             </div>
         </div>
     `;
-    
+
     // Atualizar editor se estiver aberto
     atualizarEditor(periodo, dados);
 }
