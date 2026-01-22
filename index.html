@@ -60,8 +60,8 @@
                     <span>Cores: <strong style="color:var(--rosa)">Rosa</strong>=1ºtri, <strong style="color:var(--roxo)">Roxo</strong>=2ºtri, <strong style="color:var(--azul)">Azul</strong>=3ºtri</span>
                 </div>
                 <div class="instrucao-item">
-                    <span class="emoji">✏️</span>
-                    <span><strong>Personalize os exames</strong> conforme seu médico orientar</span>
+                    <span class="emoji">🩺</span>
+                    <span><strong>Veja os exames recomendados</strong> para cada período da gestação</span>
                 </div>
             </div>
         </div>
@@ -268,40 +268,8 @@
                     <span class="icon">🩺</span>
                     Exames e Consultas Recomendados
                 </div>
-                <button id="btnEditor" class="btn btn-secondary btn-sm" aria-label="Editar lista de exames" aria-expanded="false" aria-controls="editorPanel">
-                    <span aria-hidden="true">✏️</span>
-                    Editar Exames
-                </button>
             </div>
-            
-            <!-- Painel do Editor -->
-            <div class="editor-panel" id="editorPanel">
-                <h3>✏️ Editando: <span id="editorPeriodo">Semanas 18-22</span></h3>
-                <div class="editor-grid">
-                    <div class="editor-grupo">
-                        <label class="form-label">📋 Exames (um por linha):</label>
-                        <textarea id="editorExames" placeholder="Ultrassom morfológico&#10;Ecocardiografia fetal"></textarea>
-                        <small>Use * no início para destacar. Ex: *Ultrassom morfológico</small>
-                    </div>
-                    <div class="editor-grupo">
-                        <label class="form-label">📅 Consultas:</label>
-                        <textarea id="editorConsultas" placeholder="Consulta pré-natal mensal" style="min-height: 80px;"></textarea>
-                    </div>
-                    <div class="editor-grupo">
-                        <label class="form-label">💡 Observações:</label>
-                        <textarea id="editorNotas" placeholder="Período ideal para ver o sexo do bebê" style="min-height: 80px;"></textarea>
-                    </div>
-                </div>
-                <div class="editor-actions">
-                    <button id="btnResetarExames" class="btn btn-secondary">
-                        Restaurar Padrão
-                    </button>
-                    <button id="btnSalvarExames" class="btn btn-primary">
-                        💾 Salvar Alterações
-                    </button>
-                </div>
-            </div>
-            
+
             <!-- Grid de Exames -->
             <div class="exames-grid" id="examesGrid">
                 <!-- Gerado via JavaScript -->
@@ -319,6 +287,9 @@
                     📸 @drrafaelpeters
                 </a>
             </div>
+            <p class="contador-visitas">
+                <span id="contadorVisitas">...</span> visitas
+            </p>
         </footer>
         
     </div>

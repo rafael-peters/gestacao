@@ -822,3 +822,15 @@
     color: white;
     text-decoration: none;
 }
+
+/* Contador de Visitas */
+.contador-visitas {
+    margin-top: var(--spacing-md);
+    font-size: var(--text-sm);
+    color: var(--texto-terciario);
+}
+
+#contadorVisitas {
+    font-weight: 600;
+    color: var(--roxo);
+}

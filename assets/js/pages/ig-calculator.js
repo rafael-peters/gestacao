@@ -32,13 +32,44 @@ const estado = {
 document.addEventListener('DOMContentLoaded', async function() {
     // Carregar dados de exames
     await carregarExames();
-    
+
     // Configurar event listeners
     configurarEventos();
-    
+
     // Calcular e renderizar estado inicial
     calcularEAtualizar();
+
+    // Incrementar e exibir contador de visitas
+    atualizarContadorVisitas();
 });
+
+// =====================================================
+// CONTADOR DE VISITAS
+// =====================================================
+
+/**
+ * Busca e incrementa o contador de visitas usando CounterAPI.dev
+ */
+async function atualizarContadorVisitas() {
+    const contadorElement = document.getElementById('contadorVisitas');
+    if (!contadorElement) return;
+
+    try {
+        // CounterAPI.dev v1 - namespace: gestacao-drrafaelpeters, name: visitas
+        // Endpoint /up incrementa e retorna o valor atual
+        const response = await fetch('https://api.counterapi.dev/v1/gestacao-drrafaelpeters/visitas/up');
+        const data = await response.json();
+
+        if (data && data.count !== undefined) {
+            contadorElement.textContent = data.count.toLocaleString('pt-BR');
+        } else {
+            contadorElement.textContent = '---';
+        }
+    } catch (error) {
+        console.warn('Erro ao carregar contador de visitas:', error);
+        contadorElement.textContent = '---';
+    }
+}
 
 /**
  * Carrega dados de exames do JSON ou localStorage
@@ -615,7 +646,7 @@ function renderizarExames() {
                 de acordo com suas <strong style="color: var(--texto);">necessidades específicas</strong>.
             </p>
             <div class="exame-nota" style="margin-top: 16px;">
-                Clique em <strong>"Editar Exames"</strong> para personalizar esta lista conforme orientação do seu médico.
+                Siga sempre as orientações do seu médico para o acompanhamento da sua gestação.
             </div>
         </div>
     `;
