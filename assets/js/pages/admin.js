@@ -7,10 +7,6 @@
 // CONFIGURACAO
 // =====================================================
 
-// Hash SHA-256 da senha "admin123" - altere conforme necessario
-// Para gerar novo hash: console.log(await hashSenha('suasenha'));
-const SENHA_HASH = '240be518fabd2724ddb6f04eeb9d5b8d5b4e0f90f52ad6f1d9f8e7d5e3f2a1b0';
-
 // Ordem dos periodos
 const PERIODOS_ORDEM = ['1-4', '5-8', '9-13', '14-17', '18-22', '23-27', '28-31', '32-35', '36-40'];
 
@@ -29,9 +25,8 @@ const estadoAdmin = {
 // =====================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar se ja esta logado (sessao)
-    const sessao = sessionStorage.getItem('adminLogado');
-    if (sessao === 'true') {
+    // Verificar se ja esta logado (token valido na sessao)
+    if (verificarTokenValido()) {
         estadoAdmin.logado = true;
         mostrarDashboard();
     }
@@ -82,45 +77,68 @@ async function handleLogin(e) {
     const senhaInput = document.getElementById('senha');
     const senha = senhaInput.value;
     const erroDiv = document.getElementById('loginErro');
+    const btnLogin = e.target.querySelector('button[type="submit"]');
 
-    // Verificar senha
-    const senhaCorreta = await verificarSenha(senha);
+    // Estado de loading
+    const textoOriginal = btnLogin.textContent;
+    btnLogin.disabled = true;
+    btnLogin.textContent = 'Verificando...';
+    erroDiv.style.display = 'none';
 
-    if (senhaCorreta) {
-        estadoAdmin.logado = true;
-        sessionStorage.setItem('adminLogado', 'true');
-        erroDiv.style.display = 'none';
-        mostrarDashboard();
-    } else {
-        erroDiv.textContent = 'Senha incorreta. Tente novamente.';
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ senha }),
+        });
+
+        const data = await response.json();
+
+        if (data.ok && data.token) {
+            estadoAdmin.logado = true;
+            sessionStorage.setItem('adminToken', data.token);
+            erroDiv.style.display = 'none';
+            mostrarDashboard();
+        } else {
+            erroDiv.textContent = data.erro || 'Senha incorreta. Tente novamente.';
+            erroDiv.style.display = 'block';
+            senhaInput.value = '';
+            senhaInput.focus();
+        }
+    } catch (err) {
+        erroDiv.textContent = 'Erro de conexao. Tente novamente.';
         erroDiv.style.display = 'block';
-        senhaInput.value = '';
-        senhaInput.focus();
+    } finally {
+        btnLogin.disabled = false;
+        btnLogin.textContent = textoOriginal;
     }
 }
 
 function handleLogout() {
     estadoAdmin.logado = false;
-    sessionStorage.removeItem('adminLogado');
+    sessionStorage.removeItem('adminToken');
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('adminDashboard').style.display = 'none';
     document.getElementById('senha').value = '';
 }
 
-async function verificarSenha(senha) {
-    // Verificacao simples por comparacao direta (para simplicidade)
-    // Em producao, usar hash SHA-256
-    const senhasValidas = ['admin123', 'gestacao2024', 'drrafael'];
-    return senhasValidas.includes(senha);
-}
+function verificarTokenValido() {
+    const token = sessionStorage.getItem('adminToken');
+    if (!token) return false;
 
-// Funcao para gerar hash (util para configurar novas senhas)
-async function hashSenha(senha) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(senha);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    try {
+        // Token format: "admin:<expiry_ms>.<signature>"
+        const [payload] = token.split('.');
+        const expira = parseInt(payload.split(':')[1], 10);
+        if (isNaN(expira) || Date.now() > expira) {
+            sessionStorage.removeItem('adminToken');
+            return false;
+        }
+        return true;
+    } catch {
+        sessionStorage.removeItem('adminToken');
+        return false;
+    }
 }
 
 // =====================================================
