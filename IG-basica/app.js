@@ -663,6 +663,78 @@
     renderTimeline();
   }
 
+  // ============ EXPORT / IMPORT ============
+  function exportConfig() {
+    const envelope = {
+      type: 'ig-basica-config',
+      version: 1,
+      exported_at: new Date().toISOString(),
+      state: state,
+      protocolo: proto,
+    };
+    const json = JSON.stringify(envelope, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const safeName = (state.paciente || 'config').replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 30);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `ig-basica-${safeName}-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('Configuração exportada', 'success');
+  }
+
+  function onImportFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.type !== 'ig-basica-config') {
+          toast('Arquivo não é uma configuração válida da IG-basica', 'error');
+          return;
+        }
+        const escolha = prompt(
+          'O que importar?\n\n' +
+          '1 — Protocolo + dados da paciente\n' +
+          '2 — Só o protocolo (mantém paciente atual)\n\n' +
+          'Digite 1 ou 2 (vazio = cancelar):'
+        );
+        if (escolha !== '1' && escolha !== '2') return;
+
+        if (escolha === '1') {
+          state = Object.assign(defaultState(), data.state || {});
+          proto = Array.isArray(data.protocolo) && data.protocolo.length
+            ? data.protocolo : protoDefault();
+        } else {
+          proto = Array.isArray(data.protocolo) && data.protocolo.length
+            ? data.protocolo : protoDefault();
+        }
+        // migração: garante que todo evento tenha cor
+        proto.forEach((ev) => {
+          if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
+        });
+        saveState();
+        saveProto();
+
+        hydrate();
+        const nomeInput = $('pacienteNome');
+        if (nomeInput) nomeInput.value = state.paciente || '';
+        render();
+        toast(escolha === '1' ? 'Protocolo + dados importados' : 'Protocolo importado', 'success');
+      } catch (err) {
+        toast('Erro ao ler arquivo: ' + err.message, 'error');
+      } finally {
+        e.target.value = ''; // permite re-importar mesmo arquivo
+      }
+    };
+    reader.readAsText(file);
+  }
+
   // ============ INIT ============
   function init() {
     $('hojeDisplay').textContent = formatDateBR(today());
@@ -682,6 +754,10 @@
     $('btnLimpar').addEventListener('click', clearState);
     $('btnProtoReset').addEventListener('click', resetProto);
     $('btnProtoAdd').addEventListener('click', addProtoEvent);
+
+    $('btnExport').addEventListener('click', exportConfig);
+    $('btnImport').addEventListener('click', () => $('importFileInput').click());
+    $('importFileInput').addEventListener('change', onImportFile);
 
     $('btnImprimir').addEventListener('click', () => {
       renderPrintCalendar();

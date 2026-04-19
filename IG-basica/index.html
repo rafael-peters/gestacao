@@ -106,8 +106,15 @@
             </div>
             <div class="igb-proto-body" id="protoBody" hidden>
                 <div class="igb-proto-controls">
-                    <button type="button" class="btn btn-sm btn-outline" id="btnProtoReset">↻ Restaurar padrão</button>
-                    <button type="button" class="btn btn-sm btn-secondary" id="btnProtoAdd">+ Novo evento</button>
+                    <div class="igb-proto-controls-left">
+                        <button type="button" class="btn btn-sm btn-secondary" id="btnExport" title="Exportar configuração para arquivo JSON">📤 Exportar</button>
+                        <button type="button" class="btn btn-sm btn-secondary" id="btnImport" title="Importar configuração de arquivo JSON">📥 Importar</button>
+                        <input type="file" id="importFileInput" accept=".json,application/json" hidden>
+                    </div>
+                    <div class="igb-proto-controls-right">
+                        <button type="button" class="btn btn-sm btn-outline" id="btnProtoReset">↻ Restaurar padrão</button>
+                        <button type="button" class="btn btn-sm btn-secondary" id="btnProtoAdd">+ Novo evento</button>
+                    </div>
                 </div>
                 <div class="igb-proto-list" id="protoList">
                     <!-- populado via JS -->

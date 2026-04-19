@@ -1250,8 +1250,15 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .igb-proto-controls {
     display: flex;
     gap: 8px;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.igb-proto-controls-left, .igb-proto-controls-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 .igb-proto-list { display: flex; flex-direction: column; gap: 6px; }
 .igb-proto-row {
