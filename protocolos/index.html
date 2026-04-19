@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolos de pré-natal | Dr. Rafael Peters</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+    <link rel="stylesheet" href="/assets/css/ig-avancada.css">
+    <style>
+        .proto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .proto-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-lg);
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--t), border-color var(--t), box-shadow var(--t);
+        }
+        .proto-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--accent);
+        }
+        .proto-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow), 0 0 24px var(--glow);
+        }
+        .proto-card.febrasgo { --accent: var(--accent-green); --glow: rgba(46,204,113,0.2); }
+        .proto-card.acog { --accent: var(--accent-blue); --glow: rgba(52,152,219,0.2); }
+        .proto-card.barcelona { --accent: var(--accent-orange); --glow: rgba(243,156,18,0.2); }
+        .proto-card.pessoal { --accent: var(--accent-purple); --glow: rgba(155,89,182,0.2); }
+        .proto-card-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+        .proto-card-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+        .proto-card-subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+        .proto-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .proto-card-meta { margin-top: 12px; font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="iga-header">
+            <div>
+                <h1 class="texto-gradiente">📋 Protocolos de pré-natal</h1>
+                <p class="subtitulo">Consulta de referências por sociedade + seu protocolo pessoal</p>
+            </div>
+            <div class="iga-header-side">
+                <a href="/IG-avancada/" class="btn btn-sm btn-secondary">← IG-avancada</a>
+            </div>
+        </header>
+
+        <div class="nota" style="padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-soft); border-left: 3px solid var(--accent-orange); border-radius: var(--r-md); color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
+            ⚠️ <strong>Importante:</strong> os protocolos públicos (FEBRASGO, ACOG, Barcelona)
+            são resumos estruturados com base nas diretrizes publicadas e podem estar desatualizados.
+            <strong>Sempre confirme contra a fonte original antes de aplicar clinicamente.</strong>
+            Seu "protocolo pessoal" é o que você edita e é a fonte de verdade no dia a dia.
+        </div>
+
+        <div class="proto-grid">
+            <a class="proto-card pessoal" href="/protocolos/viewer.html?p=pessoal">
+                <span class="proto-card-emoji">⭐</span>
+                <div class="proto-card-title">Protocolo Pessoal</div>
+                <div class="proto-card-subtitle">Dr. Rafael Peters</div>
+                <div class="proto-card-desc">Seu protocolo de pré-natal. Editável a qualquer momento.</div>
+                <div class="proto-card-meta">editar diretamente / fonte de verdade</div>
+            </a>
+
+            <a class="proto-card febrasgo" href="/protocolos/viewer.html?p=febrasgo">
+                <span class="proto-card-emoji">🇧🇷</span>
+                <div class="proto-card-title">FEBRASGO</div>
+                <div class="proto-card-subtitle">Federação Brasileira</div>
+                <div class="proto-card-desc">Manual de Assistência Pré-Natal da Federação Brasileira de Ginecologia e Obstetrícia.</div>
+                <div class="proto-card-meta">ref. 2024 · revisar periodicamente</div>
+            </a>
+
+            <a class="proto-card acog" href="/protocolos/viewer.html?p=acog">
+                <span class="proto-card-emoji">🇺🇸</span>
+                <div class="proto-card-title">ACOG</div>
+                <div class="proto-card-subtitle">American College of O&G</div>
+                <div class="proto-card-desc">Practice Bulletins e Committee Opinions do ACOG sobre assistência pré-natal.</div>
+                <div class="proto-card-meta">ref. 2023-2024</div>
+            </a>
+
+            <a class="proto-card barcelona" href="/protocolos/viewer.html?p=barcelona">
+                <span class="proto-card-emoji">🇪🇸</span>
+                <div class="proto-card-title">Barcelona (BCNatal)</div>
+                <div class="proto-card-subtitle">Hospital Clínic / Sant Joan de Déu</div>
+                <div class="proto-card-desc">Protocolos do BCNatal, com foco em rastreio integrado de 1º trimestre e medicina fetal.</div>
+                <div class="proto-card-meta">ref. 2023</div>
+            </a>
+        </div>
+
+        <footer class="iga-footer">
+            <p><a href="/">🏠 Home</a> <span class="separador">·</span> <a href="/IG-avancada/">🔬 IG-avancada</a> <span class="separador">·</span> <a href="/docs/estudo-pre-natal.md">📘 Estudo técnico</a></p>
+            <p class="autor">Dr. Rafael Peters · Medicina Fetal e Ultrassonografia</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Rafael Peters — Medicina Fetal</title>
+    <meta name="description" content="Calculadora rápida de idade gestacional e timeline de exames — versão reduzida para uso em consultório.">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤰</text></svg>">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- HEADER -->
+        <header class="iga-header">
+            <div>
+                <h1 class="texto-gradiente">🤰 Dr. Rafael Peters — Medicina Fetal <span class="iga-versao">v2.0</span></h1>
+                <p class="subtitulo">Cálculo rápido de IG + timeline de consultas</p>
+            </div>
+            <div class="iga-header-side">
+                <div class="iga-hoje">
+                    <span class="iga-hoje-label">Hoje</span>
+                    <span class="iga-hoje-data" id="hojeDisplay">—</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- BANNER IG (sempre visível) -->
+        <section class="card iga-lock igb-banner" id="banner">
+            <div class="iga-lock-head">
+                <span class="iga-lock-badge" id="bannerBadge">◌ nenhum método</span>
+                <div class="igb-banner-ref" id="bannerRef">—</div>
+                <button type="button" class="btn btn-sm btn-outline igb-btn-print" id="btnImprimir" title="Imprimir / salvar PDF">
+                    🖨️ Imprimir / PDF
+                </button>
+            </div>
+            <div class="iga-lock-body">
+                <input type="text" id="pacienteNome" class="iga-lock-name" placeholder="Nome da paciente (opcional)" autocomplete="off">
+                <div class="iga-lock-main" id="bannerMain">—</div>
+                <div class="iga-lock-sub" id="bannerSub">Preencha uma entrada e selecione para ver a IG e o DPP.</div>
+            </div>
+        </section>
+
+        <!-- HEADER DE IMPRESSÃO (só aparece no PDF) -->
+        <div class="igb-print-header">
+            <h1>Dr. Rafael Peters</h1>
+            <p>Medicina Fetal e Ultrassonografia · CREMERS 19676 · RQE 1041 / 38073</p>
+        </div>
+
+        <!-- GRID: entradas | calendário | timeline -->
+        <div class="iga-grid igb-grid-3">
+
+            <!-- ENTRADAS -->
+            <section class="card igb-inputs">
+                <div class="card-header roxo">
+                    <span class="icon">📥</span>
+                    Métodos de cálculo
+                    <span class="igb-inputs-hint">clique no círculo para usar</span>
+                </div>
+                <div class="igb-methods" id="methodsList">
+                    <!-- populado via JS -->
+                </div>
+                <button type="button" class="btn btn-secondary igb-btn-limpar" id="btnLimpar" title="Limpar todas as datas e seleções">
+                    🗑️ Limpar datas
+                </button>
+            </section>
+
+            <!-- TIMELINE -->
+            <section class="card iga-timeline">
+                <div class="card-header azul">
+                    <span class="icon">🗓️</span>
+                    Timeline de consultas
+                </div>
+                <div class="iga-timeline-body" id="timelineBody">
+                    <div class="iga-results-hint">Selecione um método à esquerda para gerar a timeline.</div>
+                </div>
+            </section>
+
+            <!-- CALENDÁRIO (múltiplos meses, rolável) -->
+            <section class="card igb-calendar">
+                <div class="card-header roxo">
+                    <span class="icon">📅</span>
+                    Calendário
+                    <span class="igb-cal-hint">role ↑↓</span>
+                </div>
+                <div class="igb-calendar-body" id="calendarBody">
+                    <!-- renderizado via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- CALENDÁRIO COMPLETO (só no print) -->
+        <section class="igb-print-only igb-print-calendar">
+            <h2 class="igb-print-cal-title">Calendário completo da gestação</h2>
+            <div class="igb-calendar-body igb-print-cal-body" id="printCalendarBody"></div>
+        </section>
+
+        <!-- PROTOCOLO EDITÁVEL -->
+        <section class="card igb-protocolo">
+            <div class="card-header rosa" style="cursor: pointer;" id="protoToggle">
+                <span class="icon">⚙️</span>
+                Protocolo (editar datas e textos da timeline)
+                <span class="igb-proto-chev" id="protoChev">▸</span>
+            </div>
+            <div class="igb-proto-body" id="protoBody" hidden>
+                <div class="igb-proto-controls">
+                    <button type="button" class="btn btn-sm btn-outline" id="btnProtoReset">↻ Restaurar padrão</button>
+                    <button type="button" class="btn btn-sm btn-secondary" id="btnProtoAdd">+ Novo evento</button>
+                </div>
+                <div class="igb-proto-list" id="protoList">
+                    <!-- populado via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="iga-footer">
+            <p class="autor">Dr. Rafael Peters · IG-basica standalone</p>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Scripts locais (standalone — nenhuma dependência externa) -->
+    <script src="./lib/biometria.js"></script>
+    <script src="./lib/ga-methods.js"></script>
+    <script src="./lib/timeline.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>

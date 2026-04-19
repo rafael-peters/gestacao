@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG-avancada — cálculo de idade gestacional | Dr. Rafael Peters</title>
+    <meta name="description" content="Calculadora avançada de idade gestacional com múltiplos métodos, escolha de fórmulas biométricas, timeline de exames e estimativa de peso fetal.">
+    <meta name="author" content="Dr. Rafael Peters">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+
+    <link rel="manifest" href="/IG-avancada/manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="stylesheet" href="/assets/css/ig-avancada.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- HEADER -->
+        <header class="iga-header">
+            <div>
+                <h1 class="texto-gradiente">🔬 IG-avancada <span class="iga-versao">v3.0</span></h1>
+                <p class="subtitulo">Cálculo de idade gestacional — múltiplos métodos com escolha de fórmula</p>
+            </div>
+            <div class="iga-header-side">
+                <div class="iga-hoje">
+                    <span class="iga-hoje-label">Hoje</span>
+                    <span class="iga-hoje-data" id="hojeDisplay">—</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="btnLimpar" title="Limpar todos os dados">
+                    🗑️ Limpar
+                </button>
+            </div>
+        </header>
+
+        <!-- IG DEFINIDA (topo quando travada) -->
+        <section class="card iga-lock" id="lockCard" hidden>
+            <div class="iga-lock-head">
+                <span class="iga-lock-badge">🔒 IG DEFINIDA</span>
+                <div class="iga-lock-actions">
+                    <button type="button" class="btn btn-sm btn-outline" id="btnRedefinir">✎ Redefinir</button>
+                    <button type="button" class="btn btn-sm btn-secondary" id="btnDestravar">🔓 Destravar</button>
+                </div>
+            </div>
+            <div class="iga-lock-body">
+                <div class="iga-lock-main" id="lockMain">—</div>
+                <div class="iga-lock-sub" id="lockSub">—</div>
+                <div class="iga-lock-meta" id="lockMeta">—</div>
+            </div>
+        </section>
+
+        <!-- GRID DE ENTRADAS + RESULTADOS -->
+        <div class="iga-grid">
+
+            <!-- COLUNA ESQUERDA: ENTRADAS -->
+            <section class="card iga-inputs">
+                <div class="card-header roxo">
+                    <span class="icon">📥</span>
+                    Entradas
+                </div>
+
+                <!-- Por data -->
+                <div class="iga-group">
+                    <div class="iga-group-title">Por data</div>
+                    <div class="iga-rows">
+                        <div class="iga-row">
+                            <label class="iga-row-label">DUM</label>
+                            <input type="text" inputmode="numeric" autocomplete="off" class="form-input iga-input-date" placeholder="d/m/aa" data-k="dum" data-kind="date">
+                        </div>
+                        <div class="iga-row">
+                            <label class="iga-row-label">Ovulação</label>
+                            <input type="text" inputmode="numeric" autocomplete="off" class="form-input iga-input-date" placeholder="d/m/aa" data-k="ovulacao" data-kind="date">
+                        </div>
+                        <div class="iga-row">
+                            <label class="iga-row-label">FIV (3 dias)</label>
+                            <input type="text" inputmode="numeric" autocomplete="off" class="form-input iga-input-date" placeholder="d/m/aa" data-k="fiv3" data-kind="date">
+                        </div>
+                        <div class="iga-row">
+                            <label class="iga-row-label">FIV (5 dias)</label>
+                            <input type="text" inputmode="numeric" autocomplete="off" class="form-input iga-input-date" placeholder="d/m/aa" data-k="fiv5" data-kind="date">
+                        </div>
+                        <div class="iga-row">
+                            <label class="iga-row-label">DPP</label>
+                            <input type="text" inputmode="numeric" autocomplete="off" class="form-input iga-input-date" placeholder="d/m/aa" data-k="dpp" data-kind="date">
+                        </div>
+                        <div class="iga-row">
+                            <label class="iga-row-label">IG manual</label>
+                            <div class="iga-row-duo">
+                                <input type="number" class="form-input form-input-compact" placeholder="sem" min="0" max="45" data-k="manual_sem">
+                                <input type="number" class="form-input form-input-compact" placeholder="dias" min="0" max="6" data-k="manual_dias">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Por US anterior -->
+                <div class="iga-group">
+                    <div class="iga-group-title">
+                        Por US anterior
+                        <button type="button" class="btn btn-sm btn-secondary" id="btnAddUS">+ US</button>
+                    </div>
+                    <div class="iga-us-list" id="usList">
+                        <div class="iga-group-empty">Nenhum ultrassom adicionado.</div>
+                    </div>
+                </div>
+
+                <!-- Por biometria atual -->
+                <div class="iga-group">
+                    <div class="iga-group-title">Por biometria (US atual)</div>
+                    <div class="iga-biometria" id="biometriaInputs">
+                        <!-- gerado via JS a partir de Biometria.CATALOGO -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLUNA DIREITA: RESULTADOS + TIMELINE -->
+            <div class="iga-right-col">
+                <section class="card iga-results">
+                    <div class="card-header rosa">
+                        <span class="icon">📊</span>
+                        Métodos calculados
+                    </div>
+
+                    <div class="iga-results-hint" id="resultsHint">
+                        Preencha alguma entrada ao lado para ver os métodos.
+                    </div>
+
+                    <table class="iga-table" id="resultsTable" hidden>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Método</th>
+                                <th>IG</th>
+                                <th>DPP</th>
+                                <th>Δ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTbody"></tbody>
+                    </table>
+
+                    <div class="iga-results-actions" id="resultsActions" hidden>
+                        <button type="button" class="btn btn-primary" id="btnDefinirIG" disabled>
+                            🔒 Definir IG pelo método selecionado
+                        </button>
+                    </div>
+                </section>
+
+                <section class="card iga-timeline" id="timelineCard">
+                    <div class="card-header azul">
+                        <span class="icon">🗓️</span>
+                        Timeline de eventos
+                        <span class="iga-tl-ref" id="timelineRef"></span>
+                    </div>
+                    <div class="iga-timeline-body" id="timelineBody">
+                        <div class="iga-results-hint">Selecione um método à direita ou trave uma IG para gerar a timeline.</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- PESO FETAL -->
+        <section class="card iga-peso">
+            <div class="card-header rosa">
+                <span class="icon">⚖️</span>
+                Peso fetal estimado
+            </div>
+
+            <div class="iga-peso-controls">
+                <label class="form-label">Fórmula</label>
+                <select class="form-input" id="pesoFormula">
+                    <!-- populated by JS from Biometria.CATALOGO_PESO -->
+                </select>
+            </div>
+
+            <div class="iga-peso-grid" id="pesoInputs">
+                <!-- 4 inputs max (DBP/HC/AC/FL), visibility by formula -->
+            </div>
+
+            <div class="iga-peso-resultado" id="pesoResultado">
+                Preencha os valores exigidos pela fórmula para estimar o peso.
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="iga-footer">
+            <p>
+                <strong>Ferramenta de apoio à decisão clínica.</strong>
+                As estimativas devem ser interpretadas pelo médico assistente.
+            </p>
+            <p>
+                <a href="/protocolos/">📋 Protocolos</a>
+                <span class="separador">·</span>
+                <a href="/docs/estudo-pre-natal.md">📘 Estudo técnico</a>
+                <span class="separador">·</span>
+                <a href="/tests/biometria-test.html">🧪 Testes</a>
+                <span class="separador">·</span>
+                <a href="/">🏠 Home</a>
+            </p>
+            <p class="autor">Dr. Rafael Peters · Medicina Fetal e Ultrassonografia</p>
+        </footer>
+    </div>
+
+    <!-- Modal de redefinição -->
+    <div class="iga-modal" id="modalRedefinir" hidden>
+        <div class="iga-modal-body">
+            <h3>Redefinir IG</h3>
+            <p>A IG travada será substituída. Esta alteração ficará registrada no histórico.</p>
+            <div class="iga-modal-compare">
+                <div><strong>Antes:</strong> <span id="modalAntes">—</span></div>
+                <div><strong>Depois:</strong> <span id="modalDepois">—</span></div>
+            </div>
+            <label class="form-label">Motivo da redefinição (obrigatório):</label>
+            <textarea id="modalMotivo" class="form-input" rows="3" placeholder="Ex: chegou exame mais precoce que sobrepõe o método anterior"></textarea>
+            <div class="iga-modal-actions">
+                <button type="button" class="btn btn-secondary" id="modalCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="modalConfirmar">Confirmar redefinição</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de destravamento -->
+    <div class="iga-modal" id="modalDestravar" hidden>
+        <div class="iga-modal-body">
+            <h3>Destravar IG</h3>
+            <p>A IG será destravada. Os métodos voltam a ser provisórios até que uma nova IG seja definida. O lock atual é arquivado no histórico para auditoria.</p>
+            <div class="iga-modal-compare">
+                <div><strong>IG atual:</strong> <span id="modalDestravarAtual">—</span></div>
+            </div>
+            <label class="form-label">Motivo do destravamento (obrigatório):</label>
+            <textarea id="modalDestravarMotivo" class="form-input" rows="3" placeholder="Ex: necessidade de revisar método baseado em novo exame ainda não disponível"></textarea>
+            <div class="iga-modal-actions">
+                <button type="button" class="btn btn-secondary" id="modalDestravarCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="modalDestravarConfirmar">🔓 Confirmar destravamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- SCRIPTS -->
+    <script src="/assets/js/core/biometria.js"></script>
+    <script src="/assets/js/core/ga-methods.js"></script>
+    <script src="/assets/js/core/timeline.js"></script>
+    <script src="/assets/js/pages/ig-avancada.js"></script>
+</body>
+</html>

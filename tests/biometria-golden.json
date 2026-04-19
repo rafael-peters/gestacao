@@ -1,0 +1,95 @@
+{
+  "_meta": {
+    "descricao": "Casos de referência para validar paridade entre biometria.js e o VBA de Pregnancy2023.xlsm. Valores calculados diretamente das fórmulas das referências bibliográficas. Tolerância padrão: ±1 dia (biometria) ou ±1% (peso).",
+    "gerado_em": "2026-04-17",
+    "tolerancia_dias": 1,
+    "tolerancia_peso_pct": 1.0
+  },
+
+  "biometria_para_ig": [
+    { "fn": "igDeDSG", "in": [10], "out_dias": 39, "note": "DSG 10mm → 5+4" },
+    { "fn": "igDeDSG", "in": [20], "out_dias": 49, "note": "DSG 20mm → 7+0" },
+    { "fn": "igDeDSG", "in": [30], "out_dias": 58, "note": "DSG 30mm → 8+2" },
+
+    { "fn": "igDeCCN_Robinson", "in": [10], "out_dias": 50, "note": "CCN 10mm → 7+1" },
+    { "fn": "igDeCCN_Robinson", "in": [20], "out_dias": 60, "note": "CCN 20mm → 8+4" },
+    { "fn": "igDeCCN_Robinson", "in": [40], "out_dias": 76, "note": "CCN 40mm → 10+6" },
+    { "fn": "igDeCCN_Robinson", "in": [60], "out_dias": 87, "note": "CCN 60mm → 12+3" },
+
+    { "fn": "igDeCCN_Intergrowth", "in": [20], "out_dias": 62, "note": "CCN 20mm Intergrowth" },
+    { "fn": "igDeCCN_Intergrowth", "in": [40], "out_dias": 75, "note": "CCN 40mm Intergrowth" },
+    { "fn": "igDeCCN_Intergrowth", "in": [60], "out_dias": 87, "note": "CCN 60mm Intergrowth" },
+
+    { "fn": "igDeCCN_Hadlock", "in": [20], "out_dias": 60, "note": "CCN 20mm Hadlock" },
+    { "fn": "igDeCCN_Hadlock", "in": [45], "out_dias": 79, "note": "CCN 45mm Hadlock" },
+
+    { "fn": "igDeDBP_Hadlock", "in": [30], "out_dias": 108, "note": "DBP 30mm → 15+3" },
+    { "fn": "igDeDBP_Hadlock", "in": [50], "out_dias": 148, "note": "DBP 50mm → 21+1" },
+    { "fn": "igDeDBP_Hadlock", "in": [80], "out_dias": 225, "note": "DBP 80mm → 32+1" },
+
+    { "fn": "igDeCF_Hadlock", "in": [10], "out_dias": 91, "note": "CF 10mm → 13+0 (confere Excel S22)" },
+    { "fn": "igDeCF_Hadlock", "in": [20], "out_dias": 112, "note": "CF 20mm → 16+0" },
+    { "fn": "igDeCF_Hadlock", "in": [50], "out_dias": 188, "note": "CF 50mm → 26+6" },
+
+    { "fn": "igDeCC_Intergrowth", "in": [80], "out_dias": 88, "note": "CC 80mm → 12+4 (confere Excel S21)" },
+    { "fn": "igDeCC_Intergrowth", "in": [150], "out_dias": 127, "note": "CC 150mm → 18+1" },
+    { "fn": "igDeCC_Intergrowth", "in": [300], "out_dias": 231, "note": "CC 300mm → 33+0" },
+
+    { "fn": "igDeTCD", "in": [15], "out_dias": 115, "note": "TCD 15mm" },
+    { "fn": "igDeTCD", "in": [30], "out_dias": 184, "note": "TCD 30mm" },
+
+    { "fn": "igDeCC_CF", "in": [80, 10], "out_dias": 91, "note": "CC+CF 80+10 → 13+0 (confere Excel S23)" },
+    { "fn": "igDeCC_CF", "in": [150, 25], "out_dias": 126, "note": "CC+CF 150+25 → 18+0" }
+  ],
+
+  "peso_fetal": [
+    { "fn": "pesoHadlock_HC_AC_FL", "in": [200, 180, 35], "out_g": 474, "note": "HC+AC+FL" },
+    { "fn": "pesoHadlock_DBP_HC_AC_FL", "in": [50, 200, 180, 35], "out_g": 469, "note": "4C" },
+    { "fn": "pesoHadlock_AC_FL", "in": [180, 35], "out_g": 480, "note": "2C (coef. 0.005281/0.01938/0.00004 em mm)" },
+    { "fn": "pesoIntergrowth_HC_AC", "in": [300, 320], "out_g": 2518, "note": "HC+AC Intergrowth (a termo médio)" }
+  ],
+
+  "formatacao": [
+    { "fn": "formatarIG", "in": [0, "curto"], "out": "0+0" },
+    { "fn": "formatarIG", "in": [15, "curto"], "out": "2+1" },
+    { "fn": "formatarIG", "in": [140, "curto"], "out": "20+0" },
+    { "fn": "formatarIG", "in": [144, "curto"], "out": "20+4" },
+    { "fn": "formatarIG", "in": [280, "curto"], "out": "40+0" },
+    { "fn": "formatarIG", "in": [140, "longo"], "out": "20 sem" },
+    { "fn": "formatarIG", "in": [141, "longo"], "out": "20 sem e 1 dia" },
+    { "fn": "formatarIG", "in": [144, "longo"], "out": "20 sem e 4 dias" }
+  ],
+
+  "ga_methods": [
+    {
+      "fn": "porDUM",
+      "in": { "hoje": "2026-04-17", "dum": "2026-01-01" },
+      "out": { "ig_dias": 106, "dpp": "2026-10-08" },
+      "note": "DUM 01-jan, hoje 17-abr → 106 dias = 15+1"
+    },
+    {
+      "fn": "porOvulacao",
+      "in": { "hoje": "2026-04-17", "data": "2026-01-15" },
+      "out": { "ig_dias": 106, "dpp": "2026-10-08" },
+      "note": "Ovulação 15-jan + 14 → mesma IG que DUM 01-jan, mesma DPP"
+    },
+    {
+      "fn": "porFIV5",
+      "in": { "hoje": "2026-04-17", "data": "2026-01-20" },
+      "out": { "ig_dias": 106, "dpp": "2026-10-08" },
+      "note": "FIV D5 20-jan → IG = 106 (equivale DUM ~01-jan)"
+    },
+    {
+      "fn": "porIGManual",
+      "in": { "hoje": "2026-04-17", "sem": 20, "dias": 3 },
+      "out": { "ig_dias": 143, "dpp": "2026-09-01" },
+      "note": "20+3 manual, DPP = hoje + (280 - 143)"
+    },
+    {
+      "fn": "porUSAnterior",
+      "in": { "hoje": "2026-04-17", "data": "2024-12-10", "sem": 14, "dias": 6 },
+      "out": { "ig_dias": 597, "dpp": "2025-06-04" },
+      "note": "Confere exemplo real Ana Carolina da planilha (14+6 em 10-12-24)"
+    }
+  ]
+}

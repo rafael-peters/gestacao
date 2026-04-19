@@ -1,0 +1,165 @@
+{
+  "id": "febrasgo",
+  "nome": "FEBRASGO",
+  "emoji": "🇧🇷",
+  "titulo_completo": "Manual de Assistência Pré-Natal",
+  "descricao": "Resumo estruturado com base nos protocolos da Federação Brasileira das Associações de Ginecologia e Obstetrícia.",
+  "fonte": "FEBRASGO — Protocolos",
+  "atualizacao": "ref. 2022-2024 · verificar atualizações",
+  "disclaimer": "Resumo indicativo. Sempre confirmar com a publicação original antes de aplicar clinicamente.",
+  "secoes": [
+    {
+      "id": "pre_concepcional",
+      "titulo": "Orientação pré-concepcional",
+      "ig_semanas": [0, 0],
+      "ig_label": "antes de engravidar",
+      "descricao": "Aconselhamento para mulheres que planejam engravidar.",
+      "itens": [
+        { "tipo": "medicacao", "nome": "Ácido fólico", "obs": "400–800 mcg/dia, iniciar 30–90 dias antes da concepção; 5 mg/dia se antecedente de DTN ou alto risco" },
+        { "tipo": "orientacao", "nome": "Atualização vacinal", "obs": "rubéola/varicela/hepatite B/tríplice viral — verificar sorologias" },
+        { "tipo": "orientacao", "nome": "Controle de comorbidades", "obs": "DM, HAS, tireoidopatia, epilepsia — ajustar medicações seguras na gestação" },
+        { "tipo": "orientacao", "nome": "Cessação de tabaco/álcool/drogas", "obs": "" }
+      ],
+      "referencias": ["FEBRASGO. Manual de Assistência Pré-Natal."]
+    },
+    {
+      "id": "consulta_inicial",
+      "titulo": "Consulta inicial (captação)",
+      "ig_semanas": [0, 12],
+      "descricao": "Anamnese completa, exame físico, solicitação da rotina e início do acompanhamento.",
+      "itens": [
+        { "tipo": "exame-obrigatorio", "nome": "Hemograma completo", "obs": "" },
+        { "tipo": "exame-obrigatorio", "nome": "Tipagem sanguínea ABO/Rh", "obs": "+ Coombs indireto se Rh negativo" },
+        { "tipo": "exame-obrigatorio", "nome": "Glicemia de jejum", "obs": "rastreio de DMG" },
+        { "tipo": "exame-obrigatorio", "nome": "VDRL (sífilis)", "obs": "repetir no 3º trimestre e no parto" },
+        { "tipo": "exame-obrigatorio", "nome": "HIV", "obs": "repetir no 3º trimestre" },
+        { "tipo": "exame-obrigatorio", "nome": "HBsAg (hepatite B)", "obs": "vacinar se susceptível" },
+        { "tipo": "exame-obrigatorio", "nome": "Anti-HCV (hepatite C)", "obs": "" },
+        { "tipo": "exame-obrigatorio", "nome": "Toxoplasmose IgG + IgM", "obs": "repetir a cada trimestre se susceptível" },
+        { "tipo": "exame", "nome": "Rubéola IgG", "obs": "vacinar pós-parto se susceptível" },
+        { "tipo": "exame", "nome": "CMV / parvovírus B19", "obs": "conforme risco" },
+        { "tipo": "exame-obrigatorio", "nome": "Urina tipo I + urocultura", "obs": "rastreio de bacteriúria assintomática" },
+        { "tipo": "exame", "nome": "TSH", "obs": "especialmente se risco ou sintomas" },
+        { "tipo": "exame", "nome": "Colpocitológico (se > 12 meses)", "obs": "" },
+        { "tipo": "us", "nome": "US obstétrico de datação", "obs": "ideal 6–10 semanas; CCN é o método mais preciso para datar" },
+        { "tipo": "medicacao", "nome": "Ácido fólico", "obs": "manter 0,4–0,8 mg/dia; 5 mg se alto risco, até 12 semanas" },
+        { "tipo": "medicacao", "nome": "Sulfato ferroso", "obs": "após 20 sem ou se anemia — 40–60 mg Fe elementar/dia" },
+        { "tipo": "orientacao", "nome": "Alimentação, atividade física, repouso", "obs": "" }
+      ],
+      "referencias": ["FEBRASGO. Manual de Assistência Pré-Natal."]
+    },
+    {
+      "id": "morfo_1t",
+      "titulo": "Morfológico de 1º trimestre + rastreio",
+      "ig_semanas": [11, 14],
+      "descricao": "Medida da translucência nucal, osso nasal, ducto venoso, regurgitação tricúspide, Doppler de artérias uterinas para rastreio combinado de aneuploidias e PE.",
+      "itens": [
+        { "tipo": "us", "nome": "US morfológico de 1º trimestre (11+0 a 13+6)", "obs": "CCN 45–84 mm; TN, OSS, DV, regurgitação, AU" },
+        { "tipo": "rastreio", "nome": "Rastreio combinado de aneuploidias", "obs": "TN + PAPP-A + b-hCG + idade materna (software FMF)" },
+        { "tipo": "rastreio", "nome": "Rastreio de pré-eclâmpsia", "obs": "PAM + Doppler AU + PlGF (quando disponível) + fatores de risco" },
+        { "tipo": "exame", "nome": "NIPT (cfDNA fetal)", "obs": "a partir de 10 sem — oferecer conforme risco/desejo" },
+        { "tipo": "medicacao", "nome": "AAS 100–150 mg/noite", "obs": "iniciar até 16 sem se alto risco de pré-eclâmpsia (idealmente 12–14 sem)" },
+        { "tipo": "medicacao", "nome": "Carbonato de cálcio 1–2 g/dia", "obs": "se baixa ingesta de cálcio, na prevenção de PE" }
+      ],
+      "referencias": ["FEBRASGO.", "Fetal Medicine Foundation (FMF)."]
+    },
+    {
+      "id": "segunda_consulta",
+      "titulo": "Consultas regulares (1º e 2º trimestre)",
+      "ig_semanas": [12, 28],
+      "descricao": "Consultas mensais, exame físico + PA + peso + altura uterina + BCF.",
+      "itens": [
+        { "tipo": "exame", "nome": "PA, peso, altura uterina, BCF", "obs": "a cada consulta" },
+        { "tipo": "orientacao", "nome": "Identificar sinais de alerta", "obs": "sangramento, cefaleia, escotomas, edema, dor epigástrica" },
+        { "tipo": "orientacao", "nome": "Movimentação fetal", "obs": "a partir de 18–20 sem (primigestas) ou 16–18 sem (multigestas)" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "morfo_2t",
+      "titulo": "Morfológico de 2º trimestre",
+      "ig_semanas": [20, 24],
+      "descricao": "US morfológico detalhado de 2º trimestre + avaliação de colo uterino + Doppler uterinas se indicado.",
+      "itens": [
+        { "tipo": "us", "nome": "US morfológico de 2º trimestre", "obs": "18–24 sem (ideal 20–22)" },
+        { "tipo": "us", "nome": "Cervicometria transvaginal", "obs": "rastreio de parto pré-termo — colo < 25 mm: considerar progesterona" },
+        { "tipo": "us", "nome": "Doppler de artérias uterinas (se não feito em 1º trimestre)", "obs": "" }
+      ],
+      "referencias": ["FEBRASGO.", "ISUOG Practice Guidelines."]
+    },
+    {
+      "id": "exames_2t_tardio",
+      "titulo": "Rastreio de DMG e anemia (2º trimestre tardio)",
+      "ig_semanas": [24, 28],
+      "descricao": "Teste oral de tolerância à glicose (TOTG 75g) + hemograma.",
+      "itens": [
+        { "tipo": "exame-obrigatorio", "nome": "TOTG 75g (2h)", "obs": "pontos de corte FEBRASGO: 92 / 180 / 153 mg/dL (jejum / 1h / 2h)" },
+        { "tipo": "exame", "nome": "Hemograma", "obs": "reavaliar anemia" },
+        { "tipo": "exame", "nome": "Coombs indireto (se Rh negativo)", "obs": "28 sem" },
+        { "tipo": "medicacao", "nome": "Imunoglobulina anti-D", "obs": "28 sem se Rh negativo, Coombs negativo e parceiro Rh positivo/desconhecido" }
+      ],
+      "referencias": ["FEBRASGO. Diabetes Gestacional.", "SBD."]
+    },
+    {
+      "id": "vacinas",
+      "titulo": "Vacinação durante a gestação",
+      "ig_semanas": [0, 40],
+      "ig_label": "conforme janela",
+      "itens": [
+        { "tipo": "vacina", "nome": "dTpa (tríplice bacteriana acelular)", "obs": "20–36 sem (ideal 27–36) — a cada gestação, para proteção de coqueluche no RN" },
+        { "tipo": "vacina", "nome": "Influenza (inativada)", "obs": "em qualquer trimestre durante a sazonalidade" },
+        { "tipo": "vacina", "nome": "Hepatite B", "obs": "se susceptível — pode iniciar em qualquer trimestre" },
+        { "tipo": "vacina", "nome": "COVID-19", "obs": "conforme recomendação atual" },
+        { "tipo": "alerta", "nome": "Contraindicadas: rubéola, varicela, febre amarela (avaliar risco)", "obs": "vacinas de vírus vivos são em geral contraindicadas" }
+      ],
+      "referencias": ["PNI/MS.", "FEBRASGO. Vacinação na Gestação."]
+    },
+    {
+      "id": "exames_3t",
+      "titulo": "Exames de 3º trimestre",
+      "ig_semanas": [28, 32],
+      "itens": [
+        { "tipo": "exame", "nome": "Hemograma", "obs": "" },
+        { "tipo": "exame", "nome": "Glicemia de jejum ou TOTG (se não feito em 2T)", "obs": "" },
+        { "tipo": "exame-obrigatorio", "nome": "VDRL + HIV (repetir)", "obs": "" },
+        { "tipo": "exame", "nome": "HBsAg (repetir se exposição)", "obs": "" },
+        { "tipo": "exame", "nome": "Toxoplasmose (se susceptível)", "obs": "" },
+        { "tipo": "exame", "nome": "Urina I + urocultura", "obs": "" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "perfil_biofisico",
+      "titulo": "Avaliação de bem-estar fetal (3T)",
+      "ig_semanas": [32, 40],
+      "descricao": "US com Doppler + perfil biofísico fetal conforme risco.",
+      "itens": [
+        { "tipo": "us", "nome": "US + peso fetal estimado", "obs": "avaliar adequação ao percentil" },
+        { "tipo": "us", "nome": "Doppler obstétrico (se RCF ou alto risco)", "obs": "AU, ACM, DV" },
+        { "tipo": "us", "nome": "Perfil biofísico fetal", "obs": "se indicado" },
+        { "tipo": "exame", "nome": "Cardiotocografia", "obs": "se indicada" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "rastreio_gbs",
+      "titulo": "Rastreio de Streptococcus do grupo B (GBS)",
+      "ig_semanas": [35, 37],
+      "itens": [
+        { "tipo": "exame-obrigatorio", "nome": "Swab vaginal + retal para GBS", "obs": "cultura — indica profilaxia intraparto se positivo" }
+      ],
+      "referencias": ["FEBRASGO.", "CDC."]
+    },
+    {
+      "id": "pre_parto",
+      "titulo": "Avaliação pré-parto",
+      "ig_semanas": [37, 40],
+      "itens": [
+        { "tipo": "us", "nome": "US + avaliação de apresentação", "obs": "cefálica, pélvica, córmica" },
+        { "tipo": "orientacao", "nome": "Plano de parto", "obs": "via, local, equipe, acompanhante" },
+        { "tipo": "alerta", "nome": "Conduta em pós-termo (≥ 41 semanas)", "obs": "considerar indução após avaliação" }
+      ],
+      "referencias": []
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "barcelona",
+  "nome": "Barcelona (BCNatal)",
+  "emoji": "🇪🇸",
+  "titulo_completo": "Protocolos de medicina fetal — Hospital Clínic / Sant Joan de Déu",
+  "descricao": "Resumo indicativo baseado nos protocolos do BCNatal (Barcelona Center for Maternal-Fetal and Neonatal Medicine).",
+  "fonte": "BCNatal / medicinafetalbarcelona.org",
+  "atualizacao": "ref. 2022-2023 · verificar protocolos atualizados",
+  "disclaimer": "Resumo indicativo — consulte as publicações originais do BCNatal antes de aplicar clinicamente.",
+  "secoes": [
+    {
+      "id": "consulta_inicial",
+      "titulo": "Visita inicial (primera consulta)",
+      "ig_semanas": [0, 10],
+      "itens": [
+        { "tipo": "exame", "nome": "Analítica completa", "obs": "hemograma, bioquímica, grupo sanguíneo + Rh, Coombs, serologias (lues, HIV, HBV, HCV, rubéola, toxoplasmose, CMV)" },
+        { "tipo": "exame", "nome": "Urocultivo + sedimento", "obs": "" },
+        { "tipo": "exame", "nome": "Citología cervical", "obs": "si > 12 meses de la última" },
+        { "tipo": "us", "nome": "Ecografía obstétrica inicial (datación)", "obs": "6–10 sem, por CRL" },
+        { "tipo": "medicacao", "nome": "Ácido fólico 400 mcg/día", "obs": "hasta sem 12; 5 mg si antecedente" },
+        { "tipo": "medicacao", "nome": "Yodo 200 mcg/día", "obs": "suplementación recomendada" }
+      ],
+      "referencias": ["BCNatal. Protocolo de seguimiento obstétrico."]
+    },
+    {
+      "id": "cribado_1t",
+      "titulo": "Cribado combinado de 1º trimestre (11+0 a 13+6)",
+      "ig_semanas": [11, 14],
+      "descricao": "Estrategia integral: aneuploidias + pré-eclâmpsia + crescimento restringido + parto pretérmino (FMF / Nicolaides).",
+      "itens": [
+        { "tipo": "us", "nome": "Ecografía 11–13+6 sem", "obs": "CRL 45–84 mm" },
+        { "tipo": "rastreio", "nome": "Cribado combinado aneuploidias", "obs": "TN + PAPP-A + β-hCG + edad materna (FMF)" },
+        { "tipo": "rastreio", "nome": "Cribado de preeclampsia", "obs": "PAM + Doppler arterias uterinas + PlGF + factores de riesgo (FMF)" },
+        { "tipo": "rastreio", "nome": "Cribado de parto pretérmino", "obs": "longitud cervical (si factores de riesgo)" },
+        { "tipo": "rastreio", "nome": "Osso nasal, ducto venoso, regurgitación tricúspide", "obs": "marcadores secundários" },
+        { "tipo": "rastreio", "nome": "cfDNA / NIPT contingente", "obs": "ofrecer según riesgo combinado" },
+        { "tipo": "medicacao", "nome": "AAS 150 mg/noche", "obs": "si alto riesgo PE — iniciar idealmente 12–16 sem" }
+      ],
+      "referencias": ["BCNatal. Cribado combinado de primer trimestre.", "Fetal Medicine Foundation (Nicolaides)."]
+    },
+    {
+      "id": "ecografia_20",
+      "titulo": "Ecografía morfológica (20 sem)",
+      "ig_semanas": [19, 22],
+      "itens": [
+        { "tipo": "us", "nome": "Ecografía morfológica detallada", "obs": "" },
+        { "tipo": "us", "nome": "Longitud cervical", "obs": "parte de la exploración estándar" },
+        { "tipo": "us", "nome": "Doppler uterinas (si no realizado en 1T)", "obs": "" }
+      ],
+      "referencias": ["BCNatal.", "ISUOG Practice Guidelines."]
+    },
+    {
+      "id": "analitica_2t",
+      "titulo": "Analítica y TOTG de 2º trimestre",
+      "ig_semanas": [24, 28],
+      "itens": [
+        { "tipo": "exame", "nome": "Hemograma", "obs": "" },
+        { "tipo": "rastreio", "nome": "TOTG 100g (3h) o 75g (2h)", "obs": "criterios O'Sullivan / IADPSG según protocolo local" },
+        { "tipo": "exame", "nome": "Coombs (si Rh negativo)", "obs": "+ profilaxia anti-D en sem 28" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "ecografia_3t",
+      "titulo": "Ecografía de 3º trimestre",
+      "ig_semanas": [32, 34],
+      "descricao": "Evaluación de crecimiento fetal, posición placentaria, bienestar fetal.",
+      "itens": [
+        { "tipo": "us", "nome": "Peso fetal estimado + percentil", "obs": "" },
+        { "tipo": "us", "nome": "Doppler AU / ACM si RCIU o alto riesgo", "obs": "" },
+        { "tipo": "us", "nome": "Placenta y líquido amniótico", "obs": "" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "cribado_gbs",
+      "titulo": "Cribado de SGB",
+      "ig_semanas": [35, 37],
+      "itens": [
+        { "tipo": "exame", "nome": "Cultivo vaginorrectal SGB", "obs": "profilaxis intraparto si positivo" }
+      ],
+      "referencias": []
+    },
+    {
+      "id": "vacunacion",
+      "titulo": "Vacunación",
+      "ig_semanas": [0, 40],
+      "ig_label": "según ventana",
+      "itens": [
+        { "tipo": "vacina", "nome": "dTpa (tos ferina)", "obs": "27–36 sem — cada embarazo" },
+        { "tipo": "vacina", "nome": "Gripe estacional", "obs": "en cualquier trimestre durante la temporada" },
+        { "tipo": "vacina", "nome": "COVID-19", "obs": "según recomendación vigente" },
+        { "tipo": "vacina", "nome": "VRS (materno)", "obs": "disponible en algunas regiones" }
+      ],
+      "referencias": []
+    }
+  ]
+}

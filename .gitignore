@@ -1,0 +1,19 @@
+# Claude Code session
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies (caso venha a ter)
+node_modules/
+
+# Logs
+*.log
+debug.log

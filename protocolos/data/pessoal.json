@@ -1,0 +1,68 @@
+{
+  "id": "pessoal",
+  "nome": "Protocolo Pessoal",
+  "emoji": "⭐",
+  "titulo_completo": "Dr. Rafael Peters",
+  "descricao": "Protocolo pessoal de pré-natal — edite diretamente este arquivo.",
+  "fonte": "Dr. Rafael Peters",
+  "atualizacao": "2026",
+  "disclaimer": "Este é o protocolo pessoal do médico assistente. Outras abas (FEBRASGO, ACOG, Barcelona) servem de referência comparativa.",
+  "secoes": [
+    {
+      "id": "consulta_inicial",
+      "titulo": "Consulta inicial",
+      "ig_semanas": [0, 10],
+      "descricao": "Anamnese completa, exame físico, solicitação de exames laboratoriais e orientações iniciais.",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "morfo_1t",
+      "titulo": "Morfológico de 1º trimestre",
+      "ig_semanas": [11, 14],
+      "descricao": "US morfológico de 1º trimestre com rastreio combinado (FMF / Nicolaides).",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "exames_2t",
+      "titulo": "Exames de 2º trimestre",
+      "ig_semanas": [18, 20],
+      "descricao": "Rotina laboratorial e avaliação de 2º trimestre.",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "morfo_2t",
+      "titulo": "Morfológico de 2º trimestre",
+      "ig_semanas": [20, 24],
+      "descricao": "US morfológico de 2º trimestre + Doppler uterinas se indicado.",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "exames_3t",
+      "titulo": "Exames de 3º trimestre",
+      "ig_semanas": [28, 32],
+      "descricao": "Rotina laboratorial de 3º trimestre + rastreios.",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "morfo_3t",
+      "titulo": "Morfológico de 3º trimestre",
+      "ig_semanas": [35, 37],
+      "descricao": "US morfológico tardio + Doppler + estimativa de peso.",
+      "itens": [],
+      "referencias": []
+    },
+    {
+      "id": "pre_parto",
+      "titulo": "Avaliação pré-parto",
+      "ig_semanas": [37, 40],
+      "descricao": "Maturidade, apresentação fetal, condições para parto.",
+      "itens": [],
+      "referencias": []
+    }
+  ]
+}

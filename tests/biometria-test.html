@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes golden — biometria.js + ga-methods.js</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --ok: #10b981;
+            --fail: #ef4444;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+            background: var(--bg); color: var(--text);
+            margin: 0; padding: 24px;
+            font-size: 13px; line-height: 1.5;
+        }
+        h1 { font-size: 18px; margin: 0 0 8px; }
+        .subtitle { color: var(--muted); margin: 0 0 24px; font-size: 12px; }
+        .summary {
+            background: var(--panel); padding: 16px; border-radius: 8px;
+            margin-bottom: 24px; border: 1px solid var(--border);
+        }
+        .summary-line { display: flex; gap: 16px; }
+        .badge {
+            padding: 2px 8px; border-radius: 4px; font-weight: 600;
+        }
+        .badge.ok { background: rgba(16, 185, 129, 0.2); color: var(--ok); }
+        .badge.fail { background: rgba(239, 68, 68, 0.2); color: var(--fail); }
+        section {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: 8px; margin-bottom: 16px; overflow: hidden;
+        }
+        section h2 {
+            font-size: 13px; margin: 0; padding: 10px 14px;
+            background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 6px 14px; border-top: 1px solid var(--border); vertical-align: top; }
+        td.status { width: 60px; font-weight: 600; }
+        td.status.ok { color: var(--ok); }
+        td.status.fail { color: var(--fail); }
+        td.fn { width: 220px; color: #a5b4fc; }
+        td.io { font-size: 12px; }
+        td.note { color: var(--muted); font-size: 11px; }
+        td.diff { color: var(--fail); font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h1>Golden tests — biometria.js + ga-methods.js</h1>
+    <p class="subtitle">
+        Valida que as fórmulas portadas do VBA produzem os valores esperados.
+        Tolerância padrão: ±1 dia (biometria), ±1% (peso).
+    </p>
+
+    <div id="summary" class="summary">Carregando…</div>
+
+    <div id="results"></div>
+
+    <script src="../assets/js/core/biometria.js"></script>
+    <script src="../assets/js/core/ga-methods.js"></script>
+    <script>
+        (async function run() {
+            const resp = await fetch('./biometria-golden.json');
+            const golden = await resp.json();
+            const meta = golden._meta;
+
+            const summary = document.getElementById('summary');
+            const results = document.getElementById('results');
+
+            let total = 0, pass = 0, fail = 0;
+
+            function mkRow(label, ok, detail, expected, actual, diff) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="status ${ok ? 'ok' : 'fail'}">${ok ? '✓' : '✗'}</td>
+                    <td class="fn">${label}</td>
+                    <td class="io">in: ${detail.in}</td>
+                    <td class="io">esperado: <b>${expected}</b><br>obtido: <b>${actual}</b></td>
+                    <td class="${ok ? 'note' : 'diff'}">${ok ? (detail.note || '') : 'DIFF: ' + diff}</td>
+                `;
+                return row;
+            }
+
+            function mkSection(title) {
+                const sec = document.createElement('section');
+                sec.innerHTML = `<h2>${title}</h2><table><tbody></tbody></table>`;
+                results.appendChild(sec);
+                return sec.querySelector('tbody');
+            }
+
+            // --- Biometria -> IG ---
+            const sec1 = mkSection('Biometria → IG');
+            for (const tc of golden.biometria_para_ig) {
+                const fn = Biometria[tc.fn];
+                if (!fn) {
+                    sec1.appendChild(mkRow(tc.fn, false,
+                        { in: JSON.stringify(tc.in), note: tc.note },
+                        tc.out_dias, 'função não encontrada', 'fn ausente'));
+                    fail++; total++; continue;
+                }
+                const actual = fn(...tc.in);
+                const diff = Math.abs(actual - tc.out_dias);
+                const ok = diff <= (meta.tolerancia_dias || 1);
+                sec1.appendChild(mkRow(tc.fn, ok,
+                    { in: JSON.stringify(tc.in), note: tc.note },
+                    tc.out_dias, actual, diff));
+                if (ok) pass++; else fail++; total++;
+            }
+
+            // --- Peso fetal ---
+            const sec2 = mkSection('Peso fetal estimado');
+            for (const tc of golden.peso_fetal) {
+                const fn = Biometria[tc.fn];
+                if (!fn) { fail++; total++; continue; }
+                const actual = fn(...tc.in);
+                const pct = Math.abs((actual - tc.out_g) / tc.out_g * 100);
+                const ok = pct <= (meta.tolerancia_peso_pct || 1);
+                sec2.appendChild(mkRow(tc.fn, ok,
+                    { in: JSON.stringify(tc.in), note: tc.note },
+                    tc.out_g + ' g', actual + ' g', pct.toFixed(2) + '%'));
+                if (ok) pass++; else fail++; total++;
+            }
+
+            // --- Formatação ---
+            const sec3 = mkSection('Formatação (IGsdd)');
+            for (const tc of golden.formatacao) {
+                const fn = Biometria[tc.fn];
+                if (!fn) { fail++; total++; continue; }
+                const actual = fn(...tc.in);
+                const ok = actual === tc.out;
+                sec3.appendChild(mkRow(tc.fn, ok,
+                    { in: JSON.stringify(tc.in) },
+                    JSON.stringify(tc.out), JSON.stringify(actual),
+                    `'${actual}' vs '${tc.out}'`));
+                if (ok) pass++; else fail++; total++;
+            }
+
+            // --- Métodos de IG ---
+            const sec4 = mkSection('Métodos de IG (ga-methods.js)');
+            for (const tc of golden.ga_methods) {
+                const fn = GAMethods[tc.fn];
+                if (!fn) { fail++; total++; continue; }
+
+                const hoje = GAMethods.parseISO(tc.in.hoje);
+                let actual, label;
+                if (tc.fn === 'porDUM') {
+                    actual = fn(hoje, GAMethods.parseISO(tc.in.dum));
+                } else if (tc.fn === 'porOvulacao' || tc.fn === 'porFIV3' || tc.fn === 'porFIV5' || tc.fn === 'porDPP') {
+                    actual = fn(hoje, GAMethods.parseISO(tc.in.data));
+                } else if (tc.fn === 'porIGManual') {
+                    actual = fn(hoje, tc.in.sem, tc.in.dias);
+                } else if (tc.fn === 'porUSAnterior') {
+                    actual = fn(hoje, GAMethods.parseISO(tc.in.data), tc.in.sem, tc.in.dias);
+                }
+
+                const igOk = actual.ig_dias === tc.out.ig_dias;
+                const dppIso = GAMethods.iso(actual.dpp);
+                const dppOk = dppIso === tc.out.dpp;
+                const ok = igOk && dppOk;
+
+                sec4.appendChild(mkRow(tc.fn, ok,
+                    { in: JSON.stringify(tc.in), note: tc.note },
+                    `ig=${tc.out.ig_dias} dpp=${tc.out.dpp}`,
+                    `ig=${actual.ig_dias} dpp=${dppIso}`,
+                    `igOK=${igOk} dppOK=${dppOk}`));
+                if (ok) pass++; else fail++; total++;
+            }
+
+            summary.innerHTML = `
+                <div class="summary-line">
+                    <span>Total: <b>${total}</b></span>
+                    <span class="badge ok">${pass} pass</span>
+                    ${fail > 0 ? `<span class="badge fail">${fail} fail</span>` : ''}
+                </div>
+            `;
+            if (fail > 0) document.title = `❌ ${fail} fail`;
+            else document.title = `✓ ${pass}/${total}`;
+        })();
+    </script>
+</body>
+</html>

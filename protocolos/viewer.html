@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo | Dr. Rafael Peters</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+    <link rel="stylesheet" href="/assets/css/ig-avancada.css">
+    <style>
+        .proto-head {
+            background: linear-gradient(135deg, var(--accent-blue-soft), var(--accent-purple-soft)), var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .proto-head::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad-accent);
+        }
+        .proto-head h1 { font-size: 28px; margin-bottom: 8px; }
+        .proto-head .subtitulo { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+        .proto-head .fonte {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--r-full);
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .proto-secoes { display: flex; flex-direction: column; gap: 16px; }
+        .proto-secao {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-lg);
+            padding: 20px;
+        }
+        .proto-secao-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-soft);
+        }
+        .proto-secao-ga {
+            padding: 4px 10px;
+            background: var(--grad-primary);
+            color: white;
+            border-radius: var(--r-full);
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+        }
+        .proto-secao h2 { font-size: 16px; color: var(--text); }
+        .proto-secao-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+
+        .proto-itens { display: flex; flex-direction: column; gap: 6px; }
+        .proto-item {
+            display: grid;
+            grid-template-columns: 24px 1fr auto;
+            gap: 10px;
+            align-items: start;
+            padding: 8px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-sm);
+            font-size: 13px;
+        }
+        .proto-item-icon { font-size: 14px; padding-top: 1px; }
+        .proto-item-body { color: var(--text); }
+        .proto-item-nome { font-weight: 500; }
+        .proto-item-obs { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .proto-item-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: var(--r-full);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            border: 1px solid;
+        }
+        .proto-item-tag.exame { color: var(--accent-blue); border-color: var(--accent-blue); }
+        .proto-item-tag.exame-obrigatorio { color: var(--accent-red); border-color: var(--accent-red); background: var(--accent-red-soft); }
+        .proto-item-tag.orientacao { color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        .proto-item-tag.medicacao { color: var(--accent-purple); border-color: var(--accent-purple); }
+        .proto-item-tag.vacina { color: var(--accent-green); border-color: var(--accent-green); }
+        .proto-item-tag.rastreio { color: var(--accent-orange); border-color: var(--accent-orange); }
+        .proto-item-tag.alerta { color: var(--accent-red); border-color: var(--accent-red); }
+        .proto-item-tag.us { color: var(--accent-pink); border-color: var(--accent-pink); }
+
+        .proto-referencias {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-soft);
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+        .proto-referencias strong { color: var(--text-muted); }
+
+        .proto-disclaimer {
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-left: 3px solid var(--accent-orange);
+            border-radius: var(--r-md);
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .proto-loading {
+            padding: 48px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+        .proto-empty {
+            padding: 24px;
+            text-align: center;
+            background: var(--bg-input);
+            border: 1px dashed var(--border);
+            border-radius: var(--r-md);
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .proto-raw-toggle {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .proto-raw {
+            background: var(--bg-input);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-md);
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: pre;
+            overflow: auto;
+            max-height: 400px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="iga-header">
+            <div>
+                <h1 class="texto-gradiente">📋 Protocolo</h1>
+                <p class="subtitulo">Visualizador de protocolo de pré-natal</p>
+            </div>
+            <div class="iga-header-side">
+                <a href="/protocolos/" class="btn btn-sm btn-secondary">← Protocolos</a>
+                <a href="/IG-avancada/" class="btn btn-sm btn-secondary">🔬 IG-avancada</a>
+            </div>
+        </header>
+
+        <div id="conteudo">
+            <div class="proto-loading">Carregando protocolo…</div>
+        </div>
+
+        <div class="proto-raw-toggle">
+            <button type="button" class="btn btn-sm btn-outline" id="btnToggleRaw">👁 Ver JSON bruto</button>
+            <div id="rawBlock" hidden>
+                <pre class="proto-raw" id="rawPre"></pre>
+                <p style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">
+                    Para editar, abra <code id="filePath" style="color: var(--accent-blue);">—</code> no seu editor.
+                </p>
+            </div>
+        </div>
+
+        <footer class="iga-footer">
+            <p><a href="/">🏠 Home</a> <span class="separador">·</span> <a href="/protocolos/">📋 Protocolos</a> <span class="separador">·</span> <a href="/IG-avancada/">🔬 IG-avancada</a></p>
+            <p class="autor">Dr. Rafael Peters · Medicina Fetal e Ultrassonografia</p>
+        </footer>
+    </div>
+
+    <script>
+        const TIPO_META = {
+            'exame': { emoji: '🧪', label: 'Exame' },
+            'exame-obrigatorio': { emoji: '🧪', label: 'Obrigatório' },
+            'orientacao': { emoji: '💬', label: 'Orientação' },
+            'medicacao': { emoji: '💊', label: 'Medicação' },
+            'vacina': { emoji: '💉', label: 'Vacina' },
+            'rastreio': { emoji: '🎯', label: 'Rastreio' },
+            'alerta': { emoji: '⚠️', label: 'Alerta' },
+            'us': { emoji: '🔬', label: 'US' },
+        };
+
+        function fmtGA(range) {
+            if (!range) return '';
+            const [a, b] = range;
+            if (a === b) return `${a} sem`;
+            return `${a}–${b} sem`;
+        }
+
+        function escapeHTML(s) {
+            if (s == null) return '';
+            return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        async function carregar() {
+            const params = new URLSearchParams(location.search);
+            const p = params.get('p') || 'pessoal';
+            const path = `/protocolos/data/${p}.json`;
+            document.getElementById('filePath').textContent = path;
+
+            const cont = document.getElementById('conteudo');
+            try {
+                const resp = await fetch(path);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                document.title = `${data.nome} — Protocolo | Dr. Rafael Peters`;
+                document.getElementById('rawPre').textContent = JSON.stringify(data, null, 2);
+                cont.innerHTML = render(data);
+            } catch (e) {
+                cont.innerHTML = `<div class="proto-empty">
+                    <strong>Não foi possível carregar o protocolo.</strong><br>
+                    <span style="font-family: var(--font-mono); font-size: 11px;">${escapeHTML(path)}</span><br>
+                    ${escapeHTML(e.message)}
+                </div>`;
+            }
+        }
+
+        function render(data) {
+            const head = `
+                <div class="proto-head">
+                    <h1>${escapeHTML(data.emoji || '')} ${escapeHTML(data.nome || '')} <span style="color: var(--text-muted); font-size: 16px; font-weight: 400;">${escapeHTML(data.titulo_completo || '')}</span></h1>
+                    ${data.descricao ? `<p class="subtitulo">${escapeHTML(data.descricao)}</p>` : ''}
+                    ${data.fonte ? `<span class="fonte">fonte: ${escapeHTML(data.fonte)}${data.atualizacao ? ' · ' + escapeHTML(data.atualizacao) : ''}</span>` : ''}
+                </div>
+            `;
+            const disclaimer = data.disclaimer ? `<div class="proto-disclaimer">⚠️ ${escapeHTML(data.disclaimer)}</div>` : '';
+
+            if (!data.secoes || !data.secoes.length) {
+                return head + disclaimer + `<div class="proto-empty">Protocolo vazio. Edite <code>/protocolos/data/${escapeHTML(data.id || '?')}.json</code> para adicionar seções.</div>`;
+            }
+
+            const secoes = data.secoes.map(renderSecao).join('');
+            return head + disclaimer + `<div class="proto-secoes">${secoes}</div>`;
+        }
+
+        function renderSecao(sec) {
+            const gaBadge = sec.ig_semanas
+                ? `<span class="proto-secao-ga">${escapeHTML(fmtGA(sec.ig_semanas))}</span>`
+                : (sec.ig_label ? `<span class="proto-secao-ga">${escapeHTML(sec.ig_label)}</span>` : '');
+
+            const itens = (sec.itens || []).map((it) => {
+                const meta = TIPO_META[it.tipo] || { emoji: '•', label: it.tipo || 'item' };
+                return `
+                    <div class="proto-item">
+                        <div class="proto-item-icon">${meta.emoji}</div>
+                        <div class="proto-item-body">
+                            <div class="proto-item-nome">${escapeHTML(it.nome || '')}</div>
+                            ${it.obs ? `<div class="proto-item-obs">${escapeHTML(it.obs)}</div>` : ''}
+                        </div>
+                        <span class="proto-item-tag ${escapeHTML(it.tipo || '')}">${escapeHTML(meta.label)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const refs = (sec.referencias && sec.referencias.length)
+                ? `<div class="proto-referencias"><strong>Referências:</strong> ${sec.referencias.map(escapeHTML).join(' · ')}</div>`
+                : '';
+
+            return `
+                <article class="proto-secao">
+                    <div class="proto-secao-head">
+                        ${gaBadge}
+                        <h2>${escapeHTML(sec.titulo || '')}</h2>
+                    </div>
+                    ${sec.descricao ? `<p class="proto-secao-desc">${escapeHTML(sec.descricao)}</p>` : ''}
+                    ${itens ? `<div class="proto-itens">${itens}</div>` : `<div class="proto-empty">Sem itens nesta seção.</div>`}
+                    ${refs}
+                </article>
+            `;
+        }
+
+        document.getElementById('btnToggleRaw').addEventListener('click', () => {
+            const el = document.getElementById('rawBlock');
+            el.hidden = !el.hidden;
+        });
+
+        carregar();
+    </script>
+</body>
+</html>

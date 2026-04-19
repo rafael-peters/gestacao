@@ -7,12 +7,12 @@
     <meta name="description" content="Calculadora interativa para converter semanas de gestação em meses, trimestres e dias. Calcule usando DUM, DPP ou dados do ultrassom.">
     <meta name="author" content="Dr. Rafael Peters">
     <meta name="keywords" content="idade gestacional, calculadora gravidez, semanas gestação, DUM, DPP, ultrassom, meses gravidez">
-    
+
     <!-- Open Graph / Compartilhamento -->
     <meta property="og:title" content="Calculadora de Idade Gestacional | Dr. Rafael Peters">
     <meta property="og:description" content="Descubra em qual mês de gestação você está. Calcule usando a data da última menstruação, DPP ou ultrassom.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://rafael-peters.github.io/gestacao/">
+    <meta property="og:url" content="https://rafael-peters.github.io/gestacao/IG-paciente/">
     <meta property="og:image" content="https://rafael-peters.github.io/gestacao/assets/og-image.png">
     <meta property="og:locale" content="pt_BR">
 
@@ -23,26 +23,26 @@
     <meta name="twitter:image" content="https://rafael-peters.github.io/gestacao/assets/og-image.png">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://rafael-peters.github.io/gestacao/">
-    
+    <link rel="canonical" href="https://rafael-peters.github.io/gestacao/IG-paciente/">
+
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤰</text></svg>">
-    
+
     <!-- CSS -->
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/calculadora.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/calculadora.css">
 </head>
 <body>
     <div class="app-container">
-        
+
         <!-- ==================== HEADER ==================== -->
         <header class="header">
             <h1 class="texto-gradiente">🤰 Calculadora de Idade Gestacional</h1>
             <p class="subtitulo">Converta semanas em meses, trimestres e dias</p>
             <span class="autor">Dr. Rafael Peters</span>
         </header>
-        
+
         <!-- ==================== INSTRUÇÕES ==================== -->
         <div class="instrucoes-box">
             <h2>📖 Como usar esta calculadora</h2>
@@ -65,14 +65,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- ==================== ENTRADA DE DADOS ==================== -->
         <section class="entrada-section card">
             <div class="card-header roxo">
                 <span class="icon">📅</span>
                 Calcule sua idade gestacional
             </div>
-            
+
             <!-- Seletor de Método -->
             <div class="metodo-selector">
                 <!-- DUM -->
@@ -93,7 +93,7 @@
                         </div>
                     </label>
                 </div>
-                
+
                 <!-- DPP -->
                 <div class="metodo-card">
                     <input type="radio" name="metodo" id="metodoDPP" value="dpp">
@@ -112,7 +112,7 @@
                         </div>
                     </label>
                 </div>
-                
+
                 <!-- Ultrassom -->
                 <div class="metodo-card">
                     <input type="radio" name="metodo" id="metodoUS" value="ultrassom">
@@ -142,7 +142,7 @@
                     </label>
                 </div>
             </div>
-            
+
             <!-- Slider e Controles Integrados -->
             <div class="slider-integrado">
                 <div class="slider-controles">
@@ -181,17 +181,17 @@
 
             <div id="erroBox" class="nota warning" style="display: none; margin-top: 16px;"></div>
         </section>
-        
+
         <!-- ==================== GRID PRINCIPAL ==================== -->
         <div class="main-grid">
-            
+
             <!-- COLUNA 1: RESULTADO -->
             <div class="card resultado-section">
                 <div class="card-header rosa">
                     <span class="icon">✨</span>
                     Resultado
                 </div>
-                
+
                 <div class="resultado-box tri2" id="resultadoBox">
                     <!-- Semanas grandes -->
                     <div class="resultado-semanas" id="semanaDisplay">20 semanas</div>
@@ -218,14 +218,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- COLUNA 2: LINHA DO TEMPO -->
             <div class="card timeline-section">
                 <div class="card-header azul">
                     <span class="icon">📅</span>
                     Linha do Tempo
                 </div>
-                
+
                 <!-- Trimestres -->
                 <div class="trimestres-row">
                     <div class="trimestre-box tri1">
@@ -241,12 +241,12 @@
                         <div class="subtitulo">28 a 40 semanas</div>
                     </div>
                 </div>
-                
+
                 <!-- Grid de Meses -->
                 <div class="meses-grid" id="mesesGrid">
                     <!-- Gerado via JavaScript -->
                 </div>
-                
+
                 <!-- Barra de Progresso -->
                 <div class="progresso-container">
                     <div class="progresso-bar">
@@ -260,7 +260,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- ==================== SEÇÃO DE EXAMES ==================== -->
         <section class="card exames-section">
             <div class="exames-header">
@@ -275,7 +275,7 @@
                 <!-- Gerado via JavaScript -->
             </div>
         </section>
-        
+
         <!-- ==================== FOOTER ==================== -->
         <footer class="footer">
             <p>Cálculo baseado em 280 dias de gestação ÷ 9 meses = ~31 dias/mês</p>
@@ -291,15 +291,15 @@
                 <span id="contadorVisitas">...</span> visitas
             </p>
         </footer>
-        
+
     </div>
 
     <!-- Toast Container -->
     <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <!-- ==================== SCRIPTS ==================== -->
-    <script src="assets/js/core/calculos.js"></script>
-    <script src="assets/js/core/formatacao.js"></script>
-    <script src="assets/js/pages/ig-calculator.js"></script>
+    <script src="/assets/js/core/calculos.js"></script>
+    <script src="/assets/js/core/formatacao.js"></script>
+    <script src="/assets/js/pages/ig-calculator.js"></script>
 </body>
 </html>

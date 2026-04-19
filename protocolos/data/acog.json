@@ -1,0 +1,101 @@
+{
+  "id": "acog",
+  "nome": "ACOG",
+  "emoji": "🇺🇸",
+  "titulo_completo": "American College of Obstetricians and Gynecologists",
+  "descricao": "Resumo indicativo baseado nos Practice Bulletins e Committee Opinions do ACOG.",
+  "fonte": "ACOG — Practice Bulletins / Committee Opinions",
+  "atualizacao": "ref. 2023-2024 · verificar atualizações",
+  "disclaimer": "Resumo indicativo — confirme diretamente nos documentos ACOG publicados antes de aplicação clínica.",
+  "secoes": [
+    {
+      "id": "pre_concepcional",
+      "titulo": "Preconception care",
+      "ig_semanas": [0, 0],
+      "ig_label": "pré-concepção",
+      "itens": [
+        { "tipo": "medicacao", "nome": "Folic acid 400 mcg/day", "obs": "at least 1 month before conception; 4 mg/day if prior NTD" },
+        { "tipo": "orientacao", "nome": "Update immunizations", "obs": "MMR, varicella (live vaccines before pregnancy)" }
+      ],
+      "referencias": ["ACOG Committee Opinion #762 — Prepregnancy Counseling"]
+    },
+    {
+      "id": "consulta_inicial",
+      "titulo": "Initial prenatal visit",
+      "ig_semanas": [0, 10],
+      "itens": [
+        { "tipo": "exame", "nome": "CBC, blood type + Rh + antibody screen", "obs": "" },
+        { "tipo": "exame", "nome": "HIV, syphilis (RPR/VDRL), HepB surface antigen, HepC", "obs": "" },
+        { "tipo": "exame", "nome": "Rubella immunity, varicella immunity", "obs": "" },
+        { "tipo": "exame", "nome": "Urine culture", "obs": "screen for asymptomatic bacteriuria" },
+        { "tipo": "exame", "nome": "Pap smear (if due)", "obs": "" },
+        { "tipo": "us", "nome": "First trimester dating US", "obs": "CRL-based dating preferred" }
+      ],
+      "referencias": ["ACOG. Prenatal Care."]
+    },
+    {
+      "id": "aneuploidy_screening",
+      "titulo": "Aneuploidy screening",
+      "ig_semanas": [10, 22],
+      "descricao": "Oferecer rastreio a todas as pacientes, independentemente da idade.",
+      "itens": [
+        { "tipo": "rastreio", "nome": "Cell-free DNA (cfDNA/NIPT)", "obs": "a partir de 10 sem — atualmente opção de primeira linha" },
+        { "tipo": "rastreio", "nome": "First-trimester combined screen (11–14 sem)", "obs": "NT + PAPP-A + hCG" },
+        { "tipo": "rastreio", "nome": "Integrated / sequential / quad screen", "obs": "alternativas" },
+        { "tipo": "rastreio", "nome": "Carrier screening", "obs": "cystic fibrosis, SMA, hemoglobinopathies, expanded panels" }
+      ],
+      "referencias": ["ACOG Practice Bulletin #226 — Screening for Fetal Chromosomal Abnormalities."]
+    },
+    {
+      "id": "anatomy_scan",
+      "titulo": "Anatomy scan",
+      "ig_semanas": [18, 22],
+      "itens": [
+        { "tipo": "us", "nome": "Detailed fetal anatomy US", "obs": "" }
+      ],
+      "referencias": ["ACOG / AIUM / SMFM — Ultrasound in Pregnancy."]
+    },
+    {
+      "id": "gdm_screening",
+      "titulo": "Gestational diabetes screening",
+      "ig_semanas": [24, 28],
+      "itens": [
+        { "tipo": "rastreio", "nome": "2-step approach (preferido ACOG)", "obs": "50g GCT (1h) → se ≥ 130–140 mg/dL, fazer OGTT 100g 3h (Carpenter-Coustan)" },
+        { "tipo": "rastreio", "nome": "1-step (IADPSG/ADA alternativo)", "obs": "75g OGTT 2h — pontos 92/180/153 mg/dL" }
+      ],
+      "referencias": ["ACOG Practice Bulletin #190 — Gestational Diabetes."]
+    },
+    {
+      "id": "vacinas",
+      "titulo": "Vaccines in pregnancy",
+      "ig_semanas": [0, 40],
+      "ig_label": "conforme janela",
+      "itens": [
+        { "tipo": "vacina", "nome": "Tdap", "obs": "27–36 sem — cada gestação" },
+        { "tipo": "vacina", "nome": "Influenza (inactivated)", "obs": "em qualquer trimestre" },
+        { "tipo": "vacina", "nome": "COVID-19", "obs": "recomendada" },
+        { "tipo": "vacina", "nome": "RSV (maternal)", "obs": "32–36 sem, sazonal (ACIP 2023)" }
+      ],
+      "referencias": ["ACOG / CDC ACIP."]
+    },
+    {
+      "id": "rh_immunoprophylaxis",
+      "titulo": "Rh immunoprophylaxis",
+      "ig_semanas": [28, 28],
+      "itens": [
+        { "tipo": "medicacao", "nome": "RhoGAM 300 mcg", "obs": "28 sem se Rh-negativo não sensibilizada; repetir pós-parto se RN Rh+" }
+      ],
+      "referencias": ["ACOG Practice Bulletin #192 — Management of Alloimmunization."]
+    },
+    {
+      "id": "gbs_screening",
+      "titulo": "Group B Strep screening",
+      "ig_semanas": [36, 37],
+      "descricao": "ACOG atualizou para 36 0/7 – 37 6/7 em 2019.",
+      "itens": [
+        { "tipo": "exame", "nome": "GBS vaginal-rectal culture", "obs": "intrapartum antibiotic prophylaxis se positivo" }
+      ],
+      "referencias": ["ACOG Committee Opinion #797 (2019)."]
+    }
+  ]
+}
