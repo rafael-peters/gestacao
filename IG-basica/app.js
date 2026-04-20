@@ -71,17 +71,52 @@
     dpp:              '#f43f5e',
     pos_termo:        '#ffffff',
   };
+  const ICONES_DEFAULT = {
+    ovulacao:   '🎯',
+    dpp:        '🏁',
+  };
+  // Marcador pequeno DENTRO da célula (número permanece visível)
+  const MARKERS_DEFAULT = {
+    dum:       'arrow-right',  // triângulo cheio apontando →
+    ovulacao:  'circle',       // círculo outline (aro)
+    dpp:       'square',       // quadrado outline
+    pos_termo: 'arrow-left',   // triângulo cheio ←
+  };
+  const CORES_MARKER_DEFAULT = {
+    dum:       '#3b82f6',
+    ovulacao:  '#ec4899',
+    dpp:       '#f43f5e',
+    pos_termo: '#ef4444',
+  };
+  const MARKER_OPTS = [
+    { v: '',             label: '—' },
+    { v: 'circle',       label: '○' },
+    { v: 'square',       label: '□' },
+    { v: 'arrow-right',  label: '▶' },
+    { v: 'arrow-left',   label: '◀' },
+    { v: 'arrow-up',     label: '▲' },
+    { v: 'arrow-down',   label: '▼' },
+    { v: 'solid',        label: '■' },
+  ];
   function protoDefault() {
-    return Timeline.EVENTOS.map((e, i) => ({
-      id: e.id,
-      label: e.label,
-      offset_dias: e.offset_dias,
-      window: e.window ? [...e.window] : null,
-      trimestre: e.trimestre,
-      cor: CORES_DEFAULT[e.id] || '#3498db',
-      opacidade: 100,
-      enabled: true,
-    }));
+    return Timeline.EVENTOS.map((e) => {
+      const marker = MARKERS_DEFAULT[e.id] || '';
+      const cor = marker && CORES_MARKER_DEFAULT[e.id]
+        ? CORES_MARKER_DEFAULT[e.id]
+        : (CORES_DEFAULT[e.id] || '#3498db');
+      return {
+        id: e.id,
+        label: e.label,
+        offset_dias: e.offset_dias,
+        window: e.window ? [...e.window] : null,
+        trimestre: e.trimestre,
+        cor,
+        opacidade: 100,
+        icone: ICONES_DEFAULT[e.id] || '',
+        marker,
+        enabled: true,
+      };
+    });
   }
   function loadProto() {
     try {
@@ -89,10 +124,17 @@
       if (!raw) return protoDefault();
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || !parsed.length) return protoDefault();
-      // Migração: garante que todos tenham cor + opacidade
+      // Migração: garante cor + opacidade + icone + marker
       parsed.forEach((ev) => {
         if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
         if (typeof ev.opacidade !== 'number') ev.opacidade = 100;
+        if (typeof ev.icone !== 'string') ev.icone = ICONES_DEFAULT[ev.id] || '';
+        if (typeof ev.marker !== 'string') ev.marker = MARKERS_DEFAULT[ev.id] || '';
+        // Se tem marker com cor branca, dá uma cor visível
+        if (ev.marker && isWhite(ev.cor) && CORES_MARKER_DEFAULT[ev.id]) {
+          ev.cor = CORES_MARKER_DEFAULT[ev.id];
+        }
+        delete ev.forma; // campo obsoleto
       });
       return parsed;
     } catch (e) { return protoDefault(); }
@@ -373,9 +415,10 @@
         const corTexto = op >= 100 ? ev.cor : hexToRgba(ev.cor, op / 100);
         corStyle = ` style="color: ${corTexto};"`;
       }
+      const iconePrefix = ev.icone ? `<span class="iga-tl-label-icon">${ev.icone}</span> ` : '';
       row.innerHTML = `
         <div class="iga-tl-dot"></div>
-        <div class="iga-tl-label"${corStyle}>${ev.label}</div>
+        <div class="iga-tl-label"${corStyle}>${iconePrefix}${ev.label}</div>
         <div class="iga-tl-sem">${formatSemanasTL(ev)}</div>
         <div class="iga-tl-date">${dateCell}</div>
         <div class="iga-tl-status ${ev.status}">${labelStatus(ev.status, ev.dias_ate)}</div>
@@ -420,12 +463,16 @@
       && a.getDate() === b.getDate();
   }
 
-  /** Retorna lista de todos os eventos (com cor não-branca) que cobrem esse dia. */
+  /**
+   * Retorna eventos que devem PINTAR O FUNDO do dia.
+   * Eventos com marker usam a cor no marker, não no fundo — são excluídos.
+   */
   function eventosDoDia(d, tlEvents) {
     if (!tlEvents) return [];
     const list = [];
     for (const ev of tlEvents) {
       if (!ev.cor || isWhite(ev.cor)) continue;
+      if (ev.marker) continue; // marker usa a cor, bg fica limpo
       const start = ev.window ? ev.window.start : ev.date;
       const end = ev.window ? ev.window.end : ev.date;
       if (d >= stripTime(start) && d <= stripTime(end)) list.push(ev);
@@ -538,7 +585,49 @@
         cell.title = hits.map((h) => h.label).join(' · ');
         cell.classList.add('has-event');
       }
-      cell.textContent = String(d.getDate());
+      // Número do dia num span posicionado (z-index 1) pra ficar acima do marker
+      const numSpan = document.createElement('span');
+      numSpan.className = 'igb-cal-day-num';
+      numSpan.textContent = String(d.getDate());
+      cell.appendChild(numSpan);
+
+      // Marker (triângulo/círculo/quadrado) no dia de início do evento.
+      // Fica DENTRO da célula, atrás do número (z-index 0 < número z-index 1).
+      if (tl) {
+        for (const ev of tl) {
+          if (!ev.marker) continue;
+          const inicio = ev.window ? stripTime(ev.window.start) : stripTime(ev.date);
+          if (!mesmoDia(d, inicio)) continue;
+          const baseCor = (ev.cor && !isWhite(ev.cor)) ? ev.cor : '#64748b';
+          const op = (typeof ev.opacidade === 'number') ? ev.opacidade : 100;
+          const corFinal = forPrint
+            ? fadeColor(baseCor, Math.max(0, Math.min(1, 1 - (op / 100) * 0.35)))
+            : hexToRgba(baseCor, op / 100);
+          const m = document.createElement('span');
+          m.className = 'igb-cal-day-marker mark-' + ev.marker;
+          m.style.color = corFinal;
+          cell.appendChild(m);
+          cell.classList.add('has-marker');
+          break; // um marker por célula
+        }
+      }
+
+      // Ícones: pequenos no canto superior direito, no início OU fim da janela
+      const icones = [];
+      if (tl) {
+        for (const ev of tl) {
+          if (!ev.icone) continue;
+          const inicio = ev.window ? stripTime(ev.window.start) : stripTime(ev.date);
+          const fim = ev.window ? stripTime(ev.window.end) : stripTime(ev.date);
+          if (mesmoDia(d, inicio) || mesmoDia(d, fim)) icones.push(ev.icone);
+        }
+      }
+      if (icones.length) {
+        const ic = document.createElement('span');
+        ic.className = 'igb-cal-day-icon';
+        ic.textContent = icones.join('');
+        cell.appendChild(ic);
+      }
       grid.appendChild(cell);
     }
     wrap.appendChild(grid);
@@ -607,7 +696,7 @@
     // header
     const h = document.createElement('div');
     h.className = 'igb-proto-header';
-    h.innerHTML = `<div>on</div><div>nome</div><div>início (d)</div><div>fim (d)</div><div>trim.</div><div>cor</div><div>op%</div><div></div>`;
+    h.innerHTML = `<div>on</div><div>nome</div><div>início (d)</div><div>fim (d)</div><div>trim.</div><div>cor</div><div>op%</div><div>ícone</div><div>marker</div><div></div>`;
     list.appendChild(h);
 
     proto.forEach((ev, idx) => {
@@ -618,6 +707,11 @@
       const end = ev.window ? ev.window[1] : '';
       const cor = ev.cor || '#ffffff';
       const op = (typeof ev.opacidade === 'number') ? ev.opacidade : 100;
+      const icone = ev.icone || '';
+      const markerAtual = ev.marker || '';
+      const markerSelect = MARKER_OPTS.map((o) =>
+        `<option value="${o.v}"${o.v === markerAtual ? ' selected' : ''}>${o.label}</option>`
+      ).join('');
 
       row.innerHTML = `
         <input type="checkbox" class="igb-proto-check" ${ev.enabled ? 'checked' : ''} data-k="enabled">
@@ -627,6 +721,8 @@
         <input type="number" value="${ev.trimestre}" min="1" max="3" data-k="trimestre">
         <input type="color" class="igb-proto-color" value="${cor}" data-k="cor" title="cor do evento (branco = sem fundo no calendário)">
         <input type="number" value="${op}" min="0" max="100" step="5" data-k="opacidade" title="opacidade da cor (0-100%)">
+        <input type="text" class="igb-proto-icone" value="${icone.replace(/"/g, '&quot;')}" maxlength="4" placeholder="—" data-k="icone" title="emoji/ícone no canto superior direito">
+        <select class="igb-proto-marker" data-k="marker" title="marcador que aparece ao redor do número do dia">${markerSelect}</select>
         <button class="igb-proto-remove" data-remove title="Remover">✕</button>
       `;
       list.appendChild(row);
@@ -638,6 +734,8 @@
           else if (k === 'label') ev.label = e.target.value;
           else if (k === 'trimestre') ev.trimestre = Number(e.target.value) || 1;
           else if (k === 'cor') ev.cor = e.target.value;
+          else if (k === 'icone') ev.icone = e.target.value;
+          else if (k === 'marker') ev.marker = e.target.value;
           else if (k === 'opacidade') {
             const n = Number(e.target.value);
             ev.opacidade = isNaN(n) ? 100 : Math.max(0, Math.min(100, n));
@@ -674,6 +772,8 @@
       trimestre: 2,
       cor: '#3498db',
       opacidade: 100,
+      icone: '',
+      marker: '',
       enabled: true,
     };
     proto.push(novo);

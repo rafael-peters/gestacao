@@ -117,6 +117,8 @@
         tags: ev.tags,
         cor: ev.cor || null,
         opacidade: (typeof ev.opacidade === 'number') ? ev.opacidade : 100,
+        icone: ev.icone || '',
+        marker: ev.marker || '',
         status,
         dias_ate: difDias(date, today), // + = futuro, - = passou
       };

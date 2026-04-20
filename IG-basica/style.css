@@ -1081,6 +1081,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     padding: 3px 0;
 }
 .igb-cal-day {
+    position: relative;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -1093,6 +1094,76 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     border: 1px solid var(--border-soft);
     border-radius: 4px;
     transition: transform var(--t-fast);
+}
+.igb-cal-day-icon {
+    position: absolute;
+    top: 0;
+    right: 1px;
+    font-size: 10px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.35));
+    z-index: 2;
+}
+
+/* Marker: pequeno símbolo dentro da célula, atrás do número */
+.igb-cal-day-marker {
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    z-index: 0;
+}
+.igb-cal-day-num {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+.igb-cal-day { overflow: hidden; }
+.igb-cal-day-marker.mark-circle {
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+.igb-cal-day-marker.mark-square {
+    border: 2px solid currentColor;
+    border-radius: 3px;
+}
+.igb-cal-day-marker.mark-solid {
+    background: currentColor;
+    border-radius: 4px;
+    opacity: 0.5;
+}
+.igb-cal-day-marker.mark-arrow-right {
+    background: currentColor;
+    clip-path: polygon(15% 15%, 85% 50%, 15% 85%);
+    -webkit-clip-path: polygon(15% 15%, 85% 50%, 15% 85%);
+}
+.igb-cal-day-marker.mark-arrow-left {
+    background: currentColor;
+    clip-path: polygon(85% 15%, 15% 50%, 85% 85%);
+    -webkit-clip-path: polygon(85% 15%, 15% 50%, 85% 85%);
+}
+.igb-cal-day-marker.mark-arrow-up {
+    background: currentColor;
+    clip-path: polygon(15% 85%, 50% 15%, 85% 85%);
+    -webkit-clip-path: polygon(15% 85%, 50% 15%, 85% 85%);
+}
+.igb-cal-day-marker.mark-arrow-down {
+    background: currentColor;
+    clip-path: polygon(15% 15%, 50% 85%, 85% 15%);
+    -webkit-clip-path: polygon(15% 15%, 50% 85%, 85% 15%);
+}
+/* Quando tem marker E NÃO tem evento cobrindo (bg via has-event), fica legível:
+   arrow/solid preenchidos têm contraste, o número precisa ficar acima. */
+.igb-cal-day.has-marker:not(.has-event) {
+    background: transparent;
+    border-color: transparent;
+}
+.igb-cal-day.has-marker .igb-cal-day-marker {
+    z-index: 0;
+}
+/* Número do dia por cima de marker/bg, com text-shadow leve p/ legibilidade */
+.igb-cal-day.has-marker {
+    text-shadow: 0 0 3px rgba(0,0,0,0.5), 0 0 2px rgba(255,255,255,0.3);
 }
 .igb-cal-day.other-month {
     color: var(--text-dim);
@@ -1263,13 +1334,24 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .igb-proto-list { display: flex; flex-direction: column; gap: 6px; }
 .igb-proto-row {
     display: grid;
-    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 28px;
+    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 48px 56px 28px;
     gap: 8px;
     align-items: center;
     padding: 6px 8px;
     background: var(--bg-input);
     border: 1px solid var(--border-soft);
     border-radius: var(--r-sm);
+}
+.igb-proto-icone { text-align: center; font-size: 14px !important; padding: 4px !important; }
+.igb-proto-marker {
+    background: var(--bg-base) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: var(--r-sm);
+    color: var(--text);
+    font-size: 13px !important;
+    padding: 5px 4px !important;
+    text-align: center;
+    cursor: pointer;
 }
 .igb-proto-row.disabled { opacity: 0.5; }
 .igb-proto-row .igb-proto-check {
@@ -1310,7 +1392,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
 .igb-proto-header {
     display: grid;
-    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 28px;
+    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 48px 56px 28px;
     gap: 8px;
     padding: 4px 8px;
     font-size: 10px;
@@ -1322,7 +1404,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .igb-proto-header > div:nth-child(1),
 .igb-proto-header > div:nth-child(6),
 .igb-proto-header > div:nth-child(7),
-.igb-proto-header > div:nth-child(8) { text-align: center; }
+.igb-proto-header > div:nth-child(8),
+.igb-proto-header > div:nth-child(9),
+.igb-proto-header > div:nth-child(10) { text-align: center; }
 .igb-proto-header > div:nth-child(3),
 .igb-proto-header > div:nth-child(4),
 .igb-proto-header > div:nth-child(5),
@@ -1331,5 +1415,5 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 @media (max-width: 720px) {
     .igb-method { grid-template-columns: 24px 80px 1fr; }
     .igb-method-ig { grid-column: 1 / -1; text-align: left; padding-left: 38px; }
-    .igb-proto-row, .igb-proto-header { grid-template-columns: 24px 1fr 50px 50px 50px 32px 48px 24px; }
+    .igb-proto-row, .igb-proto-header { grid-template-columns: 24px 1fr 50px 50px 50px 32px 48px 40px 48px 24px; }
 }
