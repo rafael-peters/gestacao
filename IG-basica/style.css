@@ -1263,7 +1263,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .igb-proto-list { display: flex; flex-direction: column; gap: 6px; }
 .igb-proto-row {
     display: grid;
-    grid-template-columns: 28px 1fr 60px 60px 60px 36px 28px;
+    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 28px;
     gap: 8px;
     align-items: center;
     padding: 6px 8px;
@@ -1310,7 +1310,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
 .igb-proto-header {
     display: grid;
-    grid-template-columns: 28px 1fr 60px 60px 60px 36px 28px;
+    grid-template-columns: 28px 1fr 60px 60px 60px 36px 56px 28px;
     gap: 8px;
     padding: 4px 8px;
     font-size: 10px;
@@ -1321,13 +1321,15 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 }
 .igb-proto-header > div:nth-child(1),
 .igb-proto-header > div:nth-child(6),
-.igb-proto-header > div:nth-child(7) { text-align: center; }
+.igb-proto-header > div:nth-child(7),
+.igb-proto-header > div:nth-child(8) { text-align: center; }
 .igb-proto-header > div:nth-child(3),
 .igb-proto-header > div:nth-child(4),
-.igb-proto-header > div:nth-child(5) { text-align: center; font-family: var(--font-mono); }
+.igb-proto-header > div:nth-child(5),
+.igb-proto-header > div:nth-child(7) { text-align: center; font-family: var(--font-mono); }
 
 @media (max-width: 720px) {
     .igb-method { grid-template-columns: 24px 80px 1fr; }
     .igb-method-ig { grid-column: 1 / -1; text-align: left; padding-left: 38px; }
-    .igb-proto-row, .igb-proto-header { grid-template-columns: 24px 1fr 50px 50px 50px 32px 24px; }
+    .igb-proto-row, .igb-proto-header { grid-template-columns: 24px 1fr 50px 50px 50px 32px 48px 24px; }
 }

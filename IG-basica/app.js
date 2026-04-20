@@ -79,6 +79,7 @@
       window: e.window ? [...e.window] : null,
       trimestre: e.trimestre,
       cor: CORES_DEFAULT[e.id] || '#3498db',
+      opacidade: 100,
       enabled: true,
     }));
   }
@@ -88,9 +89,10 @@
       if (!raw) return protoDefault();
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || !parsed.length) return protoDefault();
-      // Migração: garante que todos tenham cor (para protos antigos sem cor)
+      // Migração: garante que todos tenham cor + opacidade
       parsed.forEach((ev) => {
         if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
+        if (typeof ev.opacidade !== 'number') ev.opacidade = 100;
       });
       return parsed;
     } catch (e) { return protoDefault(); }
@@ -364,8 +366,13 @@
       const dateCell = ev.window
         ? `${formatDateBR(ev.window.start)}<span class="range-sep">–</span>${formatDateBR(ev.window.end)}`
         : formatDateBR(ev.date);
-      // cor do texto do nome: cor do evento (se não for branco/vazio)
-      const corStyle = (ev.cor && !isWhite(ev.cor)) ? ` style="color: ${ev.cor};"` : '';
+      // cor do texto do nome: cor do evento com opacidade (se não for branco/vazio)
+      let corStyle = '';
+      if (ev.cor && !isWhite(ev.cor)) {
+        const op = (typeof ev.opacidade === 'number') ? ev.opacidade : 100;
+        const corTexto = op >= 100 ? ev.cor : hexToRgba(ev.cor, op / 100);
+        corStyle = ` style="color: ${corTexto};"`;
+      }
       row.innerHTML = `
         <div class="iga-tl-dot"></div>
         <div class="iga-tl-label"${corStyle}>${ev.label}</div>
@@ -381,6 +388,18 @@
     if (!c) return true;
     const s = String(c).toLowerCase().trim();
     return s === '#fff' || s === '#ffffff' || s === 'white' || s === 'rgb(255, 255, 255)';
+  }
+
+  /** Converte #rrggbb para rgba com alpha (0..1). */
+  function hexToRgba(hex, alpha) {
+    if (!hex || hex[0] !== '#') return hex;
+    const h = hex.replace('#', '');
+    if (h.length !== 6) return hex;
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    const a = Math.max(0, Math.min(1, alpha));
+    return `rgba(${r}, ${g}, ${b}, ${a})`;
   }
 
   // ============ RENDER: calendário de 2 meses ============
@@ -487,7 +506,15 @@
 
       const hits = eventosDoDia(d, tl);
       if (hits.length) {
-        const cores = hits.map((h) => forPrint ? fadeColor(h.cor, 0.65) : h.cor);
+        const cores = hits.map((h) => {
+          const op = (typeof h.opacidade === 'number') ? h.opacidade : 100;
+          if (forPrint) {
+            // Print: fadeColor com ajuste por opacidade (menor opacidade = mais claro)
+            const mix = 1 - (op / 100) * 0.35;
+            return fadeColor(h.cor, Math.max(0, Math.min(1, mix)));
+          }
+          return hexToRgba(h.cor, op / 100);
+        });
         if (cores.length === 1) {
           cell.style.background = cores[0];
           cell.style.color = forPrint ? '#0a0a12' : contrasteTexto(hits[0].cor);
@@ -580,7 +607,7 @@
     // header
     const h = document.createElement('div');
     h.className = 'igb-proto-header';
-    h.innerHTML = `<div>on</div><div>nome</div><div>início (d)</div><div>fim (d)</div><div>trim.</div><div>cor</div><div></div>`;
+    h.innerHTML = `<div>on</div><div>nome</div><div>início (d)</div><div>fim (d)</div><div>trim.</div><div>cor</div><div>op%</div><div></div>`;
     list.appendChild(h);
 
     proto.forEach((ev, idx) => {
@@ -590,6 +617,7 @@
       const start = ev.window ? ev.window[0] : ev.offset_dias;
       const end = ev.window ? ev.window[1] : '';
       const cor = ev.cor || '#ffffff';
+      const op = (typeof ev.opacidade === 'number') ? ev.opacidade : 100;
 
       row.innerHTML = `
         <input type="checkbox" class="igb-proto-check" ${ev.enabled ? 'checked' : ''} data-k="enabled">
@@ -598,6 +626,7 @@
         <input type="number" value="${end}" min="0" max="320" placeholder="—" data-k="end" title="fim da janela (vazio = evento pontual)">
         <input type="number" value="${ev.trimestre}" min="1" max="3" data-k="trimestre">
         <input type="color" class="igb-proto-color" value="${cor}" data-k="cor" title="cor do evento (branco = sem fundo no calendário)">
+        <input type="number" value="${op}" min="0" max="100" step="5" data-k="opacidade" title="opacidade da cor (0-100%)">
         <button class="igb-proto-remove" data-remove title="Remover">✕</button>
       `;
       list.appendChild(row);
@@ -609,6 +638,10 @@
           else if (k === 'label') ev.label = e.target.value;
           else if (k === 'trimestre') ev.trimestre = Number(e.target.value) || 1;
           else if (k === 'cor') ev.cor = e.target.value;
+          else if (k === 'opacidade') {
+            const n = Number(e.target.value);
+            ev.opacidade = isNaN(n) ? 100 : Math.max(0, Math.min(100, n));
+          }
           else if (k === 'start') {
             const n = Number(e.target.value);
             ev.offset_dias = n;
@@ -640,6 +673,7 @@
       window: null,
       trimestre: 2,
       cor: '#3498db',
+      opacidade: 100,
       enabled: true,
     };
     proto.push(novo);
