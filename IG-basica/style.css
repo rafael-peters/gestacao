@@ -1605,3 +1605,168 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     .igb-method-ig { grid-column: 1 / -1; text-align: left; padding-left: 38px; }
     .igb-proto-row, .igb-proto-header { grid-template-columns: 24px 1fr 50px 50px 50px 32px 48px 40px 48px 24px; }
 }
+
+/* ============================================================ */
+/* ===== MOBILE ≤ 640px — redesign completo pra celular ====== */
+/* ============================================================ */
+@media (max-width: 640px) {
+    /* ---------- CONTAINER GERAL ---------- */
+    .app-container { padding: 12px; }
+    .iga-grid { gap: 12px; margin-bottom: 16px; }
+    .card { padding: 14px; border-radius: var(--r-md); }
+
+    /* ---------- HEADER ---------- */
+    .iga-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+    .iga-header h1 { font-size: 20px; letter-spacing: -0.01em; }
+    .iga-header .subtitulo { font-size: 12px; }
+    .iga-versao { font-size: 10px; padding: 2px 7px; }
+    .iga-header-side { align-self: stretch; justify-content: flex-start; }
+    .iga-hoje { padding: 6px 10px; }
+    .iga-hoje-data { font-size: 13px; }
+
+    /* ---------- BANNER IG ---------- */
+    .igb-banner { padding: 16px; }
+    .igb-banner::before { height: 2px; }
+    .iga-lock-head {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .iga-lock-badge { font-size: 10px; padding: 3px 9px; }
+    .igb-banner-ref { font-size: 10px; flex-basis: 100%; order: -1; text-align: left; }
+    .igb-btn-full, .igb-btn-print {
+        flex: 1;
+        font-size: 11px;
+        padding: 8px 6px;
+        min-width: 120px;
+    }
+    .iga-lock-name { font-size: 18px; padding: 4px 0 6px; margin-bottom: 6px; }
+    .iga-lock-main { font-size: 24px; line-height: 1.1; }
+    .iga-lock-sub { font-size: 12px; }
+
+    /* ---------- MÉTODOS: grid areas pra melhor uso do espaço ---------- */
+    .igb-inputs .card-header { font-size: 11px; margin-bottom: 10px; }
+    .igb-inputs-hint { font-size: 9px; }
+    .igb-method {
+        display: grid !important;
+        grid-template-columns: 24px 1fr auto !important;
+        grid-template-areas:
+            "radio label ig"
+            "inputs inputs inputs" !important;
+        gap: 8px 10px;
+        padding: 10px 12px;
+        align-items: center;
+    }
+    .igb-method-radio { grid-area: radio; width: 20px; height: 20px; }
+    .igb-method-label { grid-area: label; text-align: left !important; padding-left: 0 !important; font-size: 13px; font-weight: 600; }
+    .igb-method-ig { grid-area: ig; text-align: right !important; padding-left: 0 !important; font-size: 12px; min-width: auto; }
+    .igb-method-ig small { font-size: 10px; }
+    .igb-method-inputs {
+        grid-area: inputs;
+        padding-top: 2px;
+        border-top: 1px dashed var(--border-soft);
+        margin-top: 2px;
+    }
+    .igb-method-inputs .form-input {
+        font-size: 14px; /* 14px pra evitar zoom auto do iOS */
+        padding: 9px 10px;
+    }
+    .igb-method-inputs .form-input-compact { width: 64px; }
+
+    /* Botão limpar */
+    .igb-btn-limpar {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    /* ---------- TIMELINE ---------- */
+    .iga-timeline .card-header { font-size: 11px; }
+    .iga-tl-row {
+        grid-template-columns: 8px 1fr 58px auto 50px;
+        gap: 6px;
+        padding: 5px 6px;
+        font-size: 11px;
+    }
+    .iga-tl-label { font-size: 12px; }
+    .iga-tl-sem { font-size: 10px; }
+    .iga-tl-date { font-size: 10px; }
+    .iga-tl-date .range-sep { margin: 0 2px; }
+    .iga-tl-status { font-size: 8px; letter-spacing: 0.04em; }
+    .iga-tl-dot { width: 6px; height: 6px; }
+    .iga-tl-trimestre { font-size: 8px; padding: 4px 0 2px; }
+
+    /* ---------- CALENDÁRIO LATERAL ---------- */
+    .igb-calendar .card-header { font-size: 11px; }
+    .igb-cal-hint { font-size: 9px; }
+    .igb-calendar-body { max-height: 500px; gap: 14px; }
+    .igb-cal-head { font-size: 11px; }
+    .igb-cal-wd { font-size: 9px; padding: 4px 0; }
+    .igb-cal-day {
+        font-size: 13px;
+        border-radius: 4px;
+    }
+    .igb-cal-day-icon { font-size: 11px; }
+
+    /* ---------- EDITOR PROTOCOLO: scroll horizontal ---------- */
+    .igb-protocolo .card-header { font-size: 11px; }
+    .igb-proto-controls { flex-direction: column; gap: 8px; align-items: stretch; }
+    .igb-proto-controls-left, .igb-proto-controls-right {
+        display: flex; gap: 6px;
+    }
+    .igb-proto-controls .btn { flex: 1; font-size: 11px; padding: 7px 8px; }
+    /* Body scrollável horizontalmente — grid preserva layout desktop */
+    .igb-proto-list {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+    }
+    .igb-proto-header, .igb-proto-row {
+        min-width: 700px;
+    }
+
+    /* ---------- FULL VIEW ---------- */
+    .igb-full-view { padding: 12px; }
+    .igb-full-view-head {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .igb-full-view-head h2 { font-size: 16px; margin-bottom: 2px; }
+    .igb-full-view-sub { font-size: 12px; }
+    .igb-full-view-actions { align-self: stretch; }
+    .igb-full-view-actions .btn { flex: 1; font-size: 11px; padding: 7px 10px; }
+    .igb-full-view-cal {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+    .igb-full-view .igb-cal-day { font-size: 12px; }
+    .igb-full-view .igb-cal-head { font-size: 13px; }
+    .igb-full-view .igb-cal-wd { font-size: 10px; }
+
+    .igb-full-view-legend {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px;
+    }
+
+    /* ---------- MODAIS / TOAST ---------- */
+    .iga-modal-body { padding: 20px; }
+    .toast-container { top: 12px; right: 12px; left: 12px; }
+    .toast { min-width: auto; }
+}
+
+/* Phones ultra compactos (Galaxy Fold fechado, etc.) */
+@media (max-width: 360px) {
+    .iga-lock-main { font-size: 20px; }
+    .iga-lock-name { font-size: 16px; }
+    .igb-method { padding: 8px 10px; }
+    .iga-tl-row { grid-template-columns: 8px 1fr 48px auto 40px; }
+    .iga-tl-date { font-size: 9px; }
+}
