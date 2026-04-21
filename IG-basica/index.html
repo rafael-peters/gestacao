@@ -32,6 +32,9 @@
             <div class="iga-lock-head">
                 <span class="iga-lock-badge" id="bannerBadge">◌ nenhum método</span>
                 <div class="igb-banner-ref" id="bannerRef">—</div>
+                <button type="button" class="btn btn-sm btn-secondary igb-btn-full" id="btnFullView" title="Abrir calendário completo da gestação">
+                    📄 Página completa
+                </button>
                 <button type="button" class="btn btn-sm btn-outline igb-btn-print" id="btnImprimir" title="Imprimir / salvar PDF">
                     🖨️ Imprimir / PDF
                 </button>
@@ -126,6 +129,33 @@
         <footer class="iga-footer">
             <p class="autor">Dr. Rafael Peters · IG-basica standalone</p>
         </footer>
+    </div>
+
+    <!-- VISUALIZAÇÃO COMPLETA (overlay) -->
+    <div id="fullView" class="igb-full-view" hidden>
+        <div class="igb-full-view-inner">
+            <header class="igb-full-view-head">
+                <div>
+                    <h2 id="fullViewTitulo">Calendário da gestação</h2>
+                    <div class="igb-full-view-sub" id="fullViewSub">—</div>
+                </div>
+                <div class="igb-full-view-actions">
+                    <button type="button" class="btn btn-sm btn-outline" id="btnFullPrint">🖨️ Imprimir</button>
+                    <button type="button" class="btn btn-sm btn-secondary" id="btnFullClose">✕ Fechar</button>
+                </div>
+            </header>
+            <div class="igb-full-view-cal" id="fullCalBody"></div>
+            <section class="igb-full-view-legend">
+                <div class="legend-col">
+                    <h3>Marcadores</h3>
+                    <ul id="legendMarcadores"></ul>
+                </div>
+                <div class="legend-col">
+                    <h3>Ecografias</h3>
+                    <ul id="legendEcografias"></ul>
+                </div>
+            </section>
+        </div>
     </div>
 
     <!-- Toast -->

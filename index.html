@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Rafael Peters — Ginecologia Obstetrícia e Medicina Fetal</title>
+    <meta name="description" content="Dr. Rafael Peters — Ginecologia, Obstetrícia e Medicina Fetal. Ferramentas de apoio para gestantes.">
+    <meta name="author" content="Dr. Rafael Peters">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Dr. Rafael Peters — Medicina Fetal">
+    <meta property="og:description" content="Ginecologia, Obstetrícia e Medicina Fetal. Ferramentas online para gestantes.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤰</text></svg>">
+    <link rel="stylesheet" href="/assets/css/ig-avancada.css">
+
+    <style>
+        .hub-header {
+            text-align: center;
+            padding: 56px 16px 40px;
+        }
+        .hub-header h1 {
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+            line-height: 1.12;
+        }
+        .hub-header p {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+        .hub-header .credenciais {
+            display: inline-block;
+            padding: 4px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-full);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .hub-card {
+            display: block;
+            position: relative;
+            padding: 32px 28px 26px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--r-lg);
+            text-decoration: none;
+            color: inherit;
+            transition: transform var(--t), border-color var(--t), box-shadow var(--t);
+            overflow: hidden;
+        }
+        .hub-card::before {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 3px;
+            background: var(--accent);
+        }
+        .hub-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow), 0 0 32px var(--glow);
+        }
+        .hub-card-emoji {
+            font-size: 44px;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .hub-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .hub-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .hub-card-paciente { --accent: var(--accent-purple); --glow: rgba(155, 89, 182, 0.2); }
+        .hub-card-basica   { --accent: var(--accent-pink);   --glow: rgba(236, 72, 153, 0.2); }
+
+        .hub-footer {
+            text-align: center;
+            padding: 56px 16px 32px;
+            margin-top: 48px;
+            border-top: 1px solid var(--border-soft);
+        }
+        .hub-footer .social a {
+            font-size: 14px;
+            color: var(--accent-pink);
+            text-decoration: none;
+            padding: 6px 14px;
+            border: 1px solid var(--accent-pink);
+            border-radius: var(--r-full);
+            transition: all var(--t);
+        }
+        .hub-footer .social a:hover {
+            background: var(--accent-pink);
+            color: white;
+        }
+        .hub-footer .disclaimer {
+            font-size: 11px;
+            color: var(--text-dim);
+            max-width: 540px;
+            margin: 16px auto 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .hub-header { padding: 36px 16px 24px; }
+            .hub-header h1 { font-size: 28px; }
+            .hub-header p { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" style="max-width: 1200px;">
+
+        <header class="hub-header">
+            <h1 class="texto-gradiente">🤰 Dr. Rafael Peters</h1>
+            <p>Ginecologia, Obstetrícia e Medicina Fetal</p>
+            <span class="credenciais">CREMERS 19676 · RQE 1041 / 38073</span>
+        </header>
+
+        <section class="hub-grid">
+
+            <a href="/IG-paciente/" class="hub-card hub-card-paciente">
+                <div class="hub-card-emoji">👩</div>
+                <h2>Duração da gestação</h2>
+                <p>Descubra em qual semana você está. Converta semanas em meses e trimestres, com exames sugeridos para cada fase.</p>
+            </a>
+
+            <a href="/IG-basica/" class="hub-card hub-card-basica">
+                <div class="hub-card-emoji">📅</div>
+                <h2>Calculadora básica</h2>
+                <p>Calculadora com timeline de consultas e calendário visual. Impressão / PDF disponível.</p>
+            </a>
+
+            <!-- Espaço para futuros banners públicos. Duplique um <a class="hub-card ..."> acima
+                 e ajuste href, emoji, título e descrição. -->
+
+        </section>
+
+        <footer class="hub-footer">
+            <p class="social">
+                <a href="https://instagram.com/drrafaelpeters" target="_blank" rel="noopener">📸 @drrafaelpeters</a>
+            </p>
+            <p class="disclaimer">
+                Ferramentas de apoio. As estimativas devem ser interpretadas pelo médico
+                assistente à luz do quadro clínico individual.
+            </p>
+        </footer>
+
+    </div>
+</body>
+</html>

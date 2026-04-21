@@ -1023,7 +1023,11 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         font-size: 7pt !important;
         border-radius: 2px !important;
     }
-    .igb-print-cal-body .igb-cal-day.other-month { opacity: 0.25; }
+    .igb-print-cal-body .igb-cal-day.other-month {
+        color: #e0e0e0 !important;
+        background: white !important;
+        border-color: #f0f0f0 !important;
+    }
     .igb-print-cal-body .igb-cal-day.today {
         border: 1.5px solid #0a0a12 !important;
         font-weight: 700;
@@ -1166,11 +1170,14 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     text-shadow: 0 0 3px rgba(0,0,0,0.5), 0 0 2px rgba(255,255,255,0.3);
 }
 .igb-cal-day.other-month {
-    color: var(--text-dim);
-    opacity: 0.35;
-    background: transparent;
-    border-color: transparent;
+    color: #4a4a5e; /* cinza discreto, visível mas claramente secundário */
+    background: transparent !important;
+    border-color: transparent !important;
 }
+.igb-cal-day.other-month .igb-cal-day-num { color: inherit; }
+/* Dias de outro mês não recebem marker nem ícone pra não confundir */
+.igb-cal-day.other-month .igb-cal-day-marker,
+.igb-cal-day.other-month .igb-cal-day-icon { display: none; }
 .igb-cal-day.today {
     border-color: var(--accent-cyan);
     box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.3);
@@ -1205,6 +1212,187 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 }
 .igb-proto-color::-webkit-color-swatch-wrapper { padding: 2px; }
 .igb-proto-color::-webkit-color-swatch { border: none; border-radius: 2px; }
+
+/* ============ VISUALIZAÇÃO COMPLETA (overlay) ============ */
+.igb-full-view {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    background: var(--bg-gradient);
+    overflow-y: auto;
+    padding: 24px;
+    animation: fadeIn 0.2s ease;
+}
+.igb-full-view[hidden] { display: none; }
+.igb-full-view-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.igb-full-view-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-soft);
+}
+.igb-full-view-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+}
+.igb-full-view-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+.igb-full-view-sub strong { color: var(--text); }
+.igb-full-view-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.igb-full-view-cal {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+@media (max-width: 1200px) { .igb-full-view-cal { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 900px) { .igb-full-view-cal { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .igb-full-view-cal { grid-template-columns: repeat(2, 1fr); } }
+
+/* Calendário da full-view: 50% menor que o calendário lateral */
+.igb-full-view .igb-cal-head {
+    font-size: 10px;
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+}
+.igb-full-view .igb-cal-wd {
+    font-size: 7px;
+    padding: 1px 0;
+}
+.igb-full-view .igb-cal-day {
+    font-size: 9px;
+    border-radius: 3px;
+}
+.igb-full-view .igb-cal-day-marker { inset: 2px; }
+.igb-full-view .igb-cal-day-marker.mark-circle,
+.igb-full-view .igb-cal-day-marker.mark-square { border-width: 1.5px; }
+.igb-full-view .igb-cal-day-icon { font-size: 7px; top: -1px; }
+.igb-full-view .igb-cal-grid { gap: 1px; }
+
+/* Legenda em 2 colunas */
+.igb-full-view-legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    margin-bottom: 16px;
+}
+@media (max-width: 700px) { .igb-full-view-legend { grid-template-columns: 1fr; } }
+.legend-col h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed var(--border-soft);
+}
+.legend-col ul { list-style: none; padding: 0; margin: 0; }
+.legend-item {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 4px 2px;
+    font-size: 12px;
+}
+.legend-item + .legend-item { border-top: 1px dashed var(--border-soft); }
+.legend-chip {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+.legend-chip .igb-cal-day-marker {
+    position: absolute;
+    inset: 2px;
+}
+.legend-icon {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 10px;
+    line-height: 1;
+}
+.legend-label {
+    color: var(--text);
+    font-weight: 500;
+}
+.legend-sem {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.legend-empty {
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 4px;
+}
+
+/* Print da página completa: esconde tudo fora do overlay */
+@media print {
+    body.igb-printing-full > *:not(.igb-full-view) { display: none !important; }
+    body.igb-printing-full .igb-full-view {
+        position: static !important;
+        background: white !important;
+        padding: 0;
+        overflow: visible;
+    }
+    body.igb-printing-full .igb-full-view-head { border-color: #ccc !important; }
+    body.igb-printing-full .igb-full-view-head h2,
+    body.igb-printing-full .igb-full-view-sub,
+    body.igb-printing-full .igb-full-view-sub strong,
+    body.igb-printing-full .legend-col h3,
+    body.igb-printing-full .legend-label,
+    body.igb-printing-full .legend-sem {
+        color: #0a0a12 !important;
+    }
+    body.igb-printing-full .igb-full-view-actions { display: none !important; }
+    body.igb-printing-full .igb-full-view-legend {
+        background: white !important;
+        border-color: #ccc !important;
+    }
+    body.igb-printing-full .igb-full-view-cal {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+    }
+    body.igb-printing-full .igb-cal-month { page-break-inside: avoid; }
+    body.igb-printing-full .igb-cal-day:not(.has-event) {
+        background: white !important;
+        color: #0a0a12 !important;
+        border-color: #ddd !important;
+    }
+    body.igb-printing-full .igb-cal-head { color: #0a0a12 !important; }
+    body.igb-printing-full .igb-cal-wd { color: #555 !important; }
+    body.igb-printing-full .igb-cal-day.other-month {
+        color: #e0e0e0 !important;
+    }
+    @page { margin: 10mm; size: A4; }
+}
 
 /* Botão limpar — ocupa a largura de uma linha abaixo da lista de métodos */
 .igb-btn-limpar {

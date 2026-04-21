@@ -82,6 +82,23 @@
     dpp:       'square',       // quadrado outline
     pos_termo: 'arrow-left',   // triângulo cheio ←
   };
+  // Categoria do evento na legenda (marcador ou ecografia)
+  const GRUPOS_DEFAULT = {
+    dum: 'marcador',
+    ovulacao: 'marcador',
+    sexo: 'marcador',
+    maturidade: 'marcador',
+    dpp: 'marcador',
+    pos_termo: 'marcador',
+    us_viabilidade: 'ecografia',
+    us_inicial: 'ecografia',
+    morfo_1t: 'ecografia',
+    morfo_1t_limite: 'ecografia',
+    morfo_2t: 'ecografia',
+    morfo_3t: 'ecografia',
+    ecocardio: 'ecografia',
+    doppler_3d: 'ecografia',
+  };
   const CORES_MARKER_DEFAULT = {
     dum:       '#3b82f6',
     ovulacao:  '#ec4899',
@@ -114,6 +131,7 @@
         opacidade: 100,
         icone: ICONES_DEFAULT[e.id] || '',
         marker,
+        grupo: GRUPOS_DEFAULT[e.id] || 'ecografia',
         enabled: true,
       };
     });
@@ -124,17 +142,17 @@
       if (!raw) return protoDefault();
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || !parsed.length) return protoDefault();
-      // Migração: garante cor + opacidade + icone + marker
+      // Migração: garante cor + opacidade + icone + marker + grupo
       parsed.forEach((ev) => {
         if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
         if (typeof ev.opacidade !== 'number') ev.opacidade = 100;
         if (typeof ev.icone !== 'string') ev.icone = ICONES_DEFAULT[ev.id] || '';
         if (typeof ev.marker !== 'string') ev.marker = MARKERS_DEFAULT[ev.id] || '';
-        // Se tem marker com cor branca, dá uma cor visível
+        if (typeof ev.grupo !== 'string') ev.grupo = GRUPOS_DEFAULT[ev.id] || 'ecografia';
         if (ev.marker && isWhite(ev.cor) && CORES_MARKER_DEFAULT[ev.id]) {
           ev.cor = CORES_MARKER_DEFAULT[ev.id];
         }
-        delete ev.forma; // campo obsoleto
+        delete ev.forma;
       });
       return parsed;
     } catch (e) { return protoDefault(); }
@@ -483,7 +501,7 @@
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
 
-  const CAL_MONTHS_BEFORE = 3;
+  const CAL_MONTHS_BEFORE = 12;
   const CAL_MONTHS_AFTER = 14;
   let _calScrolledOnce = false;
 
@@ -546,10 +564,21 @@
       const d = new Date(inicioGrid.getFullYear(), inicioGrid.getMonth(), inicioGrid.getDate() + i);
       const cell = document.createElement('div');
       cell.className = 'igb-cal-day';
-      if (d.getMonth() !== m) cell.classList.add('other-month');
+      const isOtherMonth = d.getMonth() !== m;
+      if (isOtherMonth) cell.classList.add('other-month');
       if (mesmoDia(d, hoje)) cell.classList.add('today');
       const isPast = d < hoje;
       if (isPast) cell.classList.add('past');
+
+      // Números de outro mês: só mostra o número, não aplica eventos
+      if (isOtherMonth) {
+        const numSpan = document.createElement('span');
+        numSpan.className = 'igb-cal-day-num';
+        numSpan.textContent = String(d.getDate());
+        cell.appendChild(numSpan);
+        grid.appendChild(cell);
+        continue;
+      }
 
       const hits = eventosDoDia(d, tl);
       if (hits.length) {
@@ -797,6 +826,103 @@
     renderTimeline();
   }
 
+  // ============ VISUALIZAÇÃO COMPLETA ============
+  function openFullView() {
+    const r = state.selected ? calcularMetodo(state.selected) : null;
+    if (!r || !r.valid) {
+      toast('Selecione um método válido primeiro', 'warning');
+      return;
+    }
+    const fv = $('fullView');
+    fv.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    const dpp = r.dpp;
+    const dum = new Date(dpp.getFullYear(), dpp.getMonth(), dpp.getDate() - 280);
+    const posTermo = new Date(dpp.getFullYear(), dpp.getMonth(), dpp.getDate() + 14);
+
+    // Subtítulo
+    const nome = state.paciente ? state.paciente : '—';
+    $('fullViewTitulo').textContent = `Calendário da gestação — ${nome}`;
+    $('fullViewSub').innerHTML =
+      `<strong>${Biometria.formatarIG(r.ig_dias, 'longo')}</strong> &middot; ` +
+      `DPP <strong>${formatDateBR(dpp)}</strong> &middot; ` +
+      `${r.descricao || ''}`;
+
+    // Calendário: do mês da DUM ao mês do 42ª sem
+    const container = $('fullCalBody');
+    container.innerHTML = '';
+    const tl = getCurrentTimelineEvents();
+    const hj = stripTime(today());
+    const cursor = new Date(dum.getFullYear(), dum.getMonth(), 1);
+    const fimMes = new Date(posTermo.getFullYear(), posTermo.getMonth(), 1);
+    while (cursor <= fimMes) {
+      container.appendChild(renderMonth(new Date(cursor), tl, hj));
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+
+    renderLegenda();
+  }
+  function closeFullView() {
+    $('fullView').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function renderLegenda() {
+    const ulMarc = $('legendMarcadores');
+    const ulEco = $('legendEcografias');
+    ulMarc.innerHTML = '';
+    ulEco.innerHTML = '';
+    proto.filter((e) => e.enabled).forEach((ev) => {
+      const destino = (ev.grupo === 'marcador') ? ulMarc : ulEco;
+      destino.appendChild(legendaItem(ev));
+    });
+    if (!ulMarc.children.length) ulMarc.innerHTML = '<li class="legend-empty">—</li>';
+    if (!ulEco.children.length) ulEco.innerHTML = '<li class="legend-empty">—</li>';
+  }
+
+  function legendaItem(ev) {
+    const li = document.createElement('li');
+    li.className = 'legend-item';
+    const chip = document.createElement('span');
+    chip.className = 'legend-chip';
+    if (ev.marker) {
+      const m = document.createElement('span');
+      m.className = 'igb-cal-day-marker mark-' + ev.marker;
+      m.style.color = ev.cor || '#999';
+      chip.appendChild(m);
+    } else if (ev.cor && !isWhite(ev.cor)) {
+      chip.style.background = ev.cor;
+    } else {
+      chip.style.background = 'transparent';
+      chip.style.border = '1px dashed var(--border)';
+    }
+    if (ev.icone) {
+      const ic = document.createElement('span');
+      ic.className = 'legend-icon';
+      ic.textContent = ev.icone;
+      chip.appendChild(ic);
+    }
+    li.appendChild(chip);
+
+    const label = document.createElement('span');
+    label.className = 'legend-label';
+    label.textContent = ev.label;
+    li.appendChild(label);
+
+    // Janela de IG
+    const sem = document.createElement('span');
+    sem.className = 'legend-sem';
+    if (ev.window) {
+      const a = Math.round(ev.window[0] / 7), b = Math.round(ev.window[1] / 7);
+      sem.textContent = a !== b ? `${a}–${b} sem` : `${a} sem`;
+    } else {
+      sem.textContent = `${Math.round(ev.offset_dias / 7)} sem`;
+    }
+    li.appendChild(sem);
+    return li;
+  }
+
   // ============ EXPORT / IMPORT ============
   function exportConfig() {
     const envelope = {
@@ -897,6 +1023,19 @@
       renderPrintCalendar();
       // pequeno delay pra garantir que o DOM atualizou antes do print dialog
       setTimeout(() => window.print(), 50);
+    });
+
+    $('btnFullView').addEventListener('click', openFullView);
+    $('btnFullClose').addEventListener('click', closeFullView);
+    $('btnFullPrint').addEventListener('click', () => {
+      document.body.classList.add('igb-printing-full');
+      setTimeout(() => {
+        window.print();
+        document.body.classList.remove('igb-printing-full');
+      }, 50);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !$('fullView').hidden) closeFullView();
     });
 
     $('protoToggle').addEventListener('click', () => {
