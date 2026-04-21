@@ -54,57 +54,7 @@
   }
 
   // ============ PROTOCOLO ============
-  // Cor por evento (default) — user pode mudar no editor. "#ffffff" = sem fundo no calendário.
-  const CORES_DEFAULT = {
-    dum:              '#ffffff',
-    ovulacao:         '#ffffff',
-    us_viabilidade:   '#06b6d4',
-    us_inicial:       '#3b82f6',
-    morfo_1t:         '#10b981',
-    morfo_1t_limite:  '#f59e0b',
-    sexo:             '#ec4899',
-    morfo_2t:         '#a855f7',
-    ecocardio:        '#ef4444',
-    doppler_3d:       '#f97316',
-    morfo_3t:         '#14b8a6',
-    maturidade:       '#eab308',
-    dpp:              '#f43f5e',
-    pos_termo:        '#ffffff',
-  };
-  const ICONES_DEFAULT = {
-    ovulacao:   '🎯',
-    dpp:        '🏁',
-  };
-  // Marcador pequeno DENTRO da célula (número permanece visível)
-  const MARKERS_DEFAULT = {
-    dum:       'arrow-right',  // triângulo cheio apontando →
-    ovulacao:  'circle',       // círculo outline (aro)
-    dpp:       'square',       // quadrado outline
-    pos_termo: 'arrow-left',   // triângulo cheio ←
-  };
-  // Categoria do evento na legenda (marcador ou ecografia)
-  const GRUPOS_DEFAULT = {
-    dum: 'marcador',
-    ovulacao: 'marcador',
-    sexo: 'marcador',
-    maturidade: 'marcador',
-    dpp: 'marcador',
-    pos_termo: 'marcador',
-    us_viabilidade: 'ecografia',
-    us_inicial: 'ecografia',
-    morfo_1t: 'ecografia',
-    morfo_1t_limite: 'ecografia',
-    morfo_2t: 'ecografia',
-    morfo_3t: 'ecografia',
-    ecocardio: 'ecografia',
-    doppler_3d: 'ecografia',
-  };
-  const CORES_MARKER_DEFAULT = {
-    dum:       '#3b82f6',
-    ovulacao:  '#ec4899',
-    dpp:       '#f43f5e',
-    pos_termo: '#ef4444',
-  };
+  // Opções de marker disponíveis no dropdown do editor.
   const MARKER_OPTS = [
     { v: '',             label: '—' },
     { v: 'circle',       label: '○' },
@@ -115,26 +65,37 @@
     { v: 'arrow-down',   label: '▼' },
     { v: 'solid',        label: '■' },
   ];
+
+  /**
+   * Lista default de eventos do protocolo — fonte única de verdade.
+   * Alterar aqui muda o padrão para novas instalações e para o botão
+   * "↻ Restaurar padrão". Usuários que já customizaram mantêm sua
+   * versão no localStorage até clicarem em reset.
+   */
+  const PROTO_DEFAULT_LIST = [
+    { id: 'dum',             label: 'DUM',                                  offset_dias:   0, window: null,       trimestre: 1, cor: '#3b82f6', opacidade: 100, icone: '',   marker: 'arrow-right', grupo: 'marcador',  enabled: true },
+    { id: 'ovulacao',        label: 'Ovulação',                             offset_dias:  14, window: null,       trimestre: 1, cor: '#fe0101', opacidade: 100, icone: '🎯', marker: 'circle',      grupo: 'marcador',  enabled: true },
+    { id: 'us_viabilidade',  label: 'US de viabilidade',                    offset_dias:  35, window: [ 35,  56], trimestre: 1, cor: '#747472', opacidade:  55, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'us_inicial',      label: 'US inicial (início do pré-natal)',     offset_dias:  56, window: [ 56,  70], trimestre: 1, cor: '#fbeda7', opacidade:  50, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'morfo_1t',        label: 'Morfológico de 1º trimestre precoce',  offset_dias:  77, window: [ 77,  84], trimestre: 1, cor: '#0ba270', opacidade: 100, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'morfo_1t_limite', label: 'Morfológico de 1º trimestre (limite)', offset_dias:  85, window: [ 85,  98], trimestre: 1, cor: '#71feb5', opacidade: 100, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'sexo',            label: 'Definição do sexo',                    offset_dias: 112, window: null,       trimestre: 2, cor: '#ffffff', opacidade:  40, icone: '⚥',  marker: '',            grupo: 'marcador',  enabled: true },
+    { id: 'morfo_2t',        label: 'Morfológico de 2º trimestre',          offset_dias: 140, window: [140, 168], trimestre: 2, cor: '#2a6ff8', opacidade: 100, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'ecocardio',       label: 'Ecocardiografia fetal',                offset_dias: 168, window: [168, 196], trimestre: 3, cor: '#e4b472', opacidade: 100, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'doppler_3d',      label: 'Doppler / 3D',                         offset_dias: 196, window: [196, 224], trimestre: 3, cor: '#40797d', opacidade:  30, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'morfo_3t',        label: 'Morfológico de 3º trimestre',          offset_dias: 245, window: [245, 259], trimestre: 3, cor: '#4f0a5c', opacidade: 100, icone: '',   marker: '',            grupo: 'ecografia', enabled: true },
+    { id: 'maturidade',      label: 'Maturidade',                           offset_dias: 259, window: null,       trimestre: 3, cor: '#ca0216', opacidade: 100, icone: '',   marker: 'arrow-up',    grupo: 'marcador',  enabled: true },
+    { id: 'dpp',             label: 'Data provável do parto',               offset_dias: 280, window: null,       trimestre: 3, cor: '#f43f5e', opacidade: 100, icone: '🏁', marker: 'square',      grupo: 'marcador',  enabled: true },
+    { id: 'pos_termo',       label: 'Pós-termo (42 semanas)',               offset_dias: 294, window: null,       trimestre: 3, cor: '#ef4444', opacidade: 100, icone: '',   marker: 'arrow-left',  grupo: 'marcador',  enabled: true },
+  ];
+  function findDefault(id) {
+    return PROTO_DEFAULT_LIST.find((e) => e.id === id) || null;
+  }
   function protoDefault() {
-    return Timeline.EVENTOS.map((e) => {
-      const marker = MARKERS_DEFAULT[e.id] || '';
-      const cor = marker && CORES_MARKER_DEFAULT[e.id]
-        ? CORES_MARKER_DEFAULT[e.id]
-        : (CORES_DEFAULT[e.id] || '#3498db');
-      return {
-        id: e.id,
-        label: e.label,
-        offset_dias: e.offset_dias,
-        window: e.window ? [...e.window] : null,
-        trimestre: e.trimestre,
-        cor,
-        opacidade: 100,
-        icone: ICONES_DEFAULT[e.id] || '',
-        marker,
-        grupo: GRUPOS_DEFAULT[e.id] || 'ecografia',
-        enabled: true,
-      };
-    });
+    return PROTO_DEFAULT_LIST.map((ev) => ({
+      ...ev,
+      window: ev.window ? [...ev.window] : null,
+    }));
   }
   function loadProto() {
     try {
@@ -142,17 +103,15 @@
       if (!raw) return protoDefault();
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || !parsed.length) return protoDefault();
-      // Migração: garante cor + opacidade + icone + marker + grupo
+      // Migração: preenche campos faltantes usando PROTO_DEFAULT_LIST
       parsed.forEach((ev) => {
-        if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
-        if (typeof ev.opacidade !== 'number') ev.opacidade = 100;
-        if (typeof ev.icone !== 'string') ev.icone = ICONES_DEFAULT[ev.id] || '';
-        if (typeof ev.marker !== 'string') ev.marker = MARKERS_DEFAULT[ev.id] || '';
-        if (typeof ev.grupo !== 'string') ev.grupo = GRUPOS_DEFAULT[ev.id] || 'ecografia';
-        if (ev.marker && isWhite(ev.cor) && CORES_MARKER_DEFAULT[ev.id]) {
-          ev.cor = CORES_MARKER_DEFAULT[ev.id];
-        }
-        delete ev.forma;
+        const def = findDefault(ev.id);
+        if (!ev.cor) ev.cor = (def && def.cor) || '#3498db';
+        if (typeof ev.opacidade !== 'number') ev.opacidade = (def && def.opacidade) ?? 100;
+        if (typeof ev.icone !== 'string') ev.icone = (def && def.icone) || '';
+        if (typeof ev.marker !== 'string') ev.marker = (def && def.marker) || '';
+        if (typeof ev.grupo !== 'string') ev.grupo = (def && def.grupo) || 'ecografia';
+        delete ev.forma; // campo obsoleto
       });
       return parsed;
     } catch (e) { return protoDefault(); }
@@ -725,15 +684,22 @@
     // header
     const h = document.createElement('div');
     h.className = 'igb-proto-header';
-    h.innerHTML = `<div>on</div><div>nome</div><div>início (d)</div><div>fim (d)</div><div>trim.</div><div>cor</div><div>op%</div><div>ícone</div><div>marker</div><div></div>`;
+    h.innerHTML = `<div>on</div><div>nome</div><div>início (sem)</div><div>fim (sem)</div><div>trim.</div><div>cor</div><div>op%</div><div>ícone</div><div>marker</div><div></div>`;
     list.appendChild(h);
+
+    // Converte dias → semanas com no máximo 1 casa decimal (12, 12.1, 13...)
+    const diasParaSem = (d) => {
+      if (typeof d !== 'number') return '';
+      const w = d / 7;
+      return Number.isInteger(w) ? String(w) : String(Math.round(w * 10) / 10);
+    };
 
     proto.forEach((ev, idx) => {
       const row = document.createElement('div');
       row.className = 'igb-proto-row' + (!ev.enabled ? ' disabled' : '');
 
-      const start = ev.window ? ev.window[0] : ev.offset_dias;
-      const end = ev.window ? ev.window[1] : '';
+      const startSem = diasParaSem(ev.window ? ev.window[0] : ev.offset_dias);
+      const endSem = ev.window ? diasParaSem(ev.window[1]) : '';
       const cor = ev.cor || '#ffffff';
       const op = (typeof ev.opacidade === 'number') ? ev.opacidade : 100;
       const icone = ev.icone || '';
@@ -745,8 +711,8 @@
       row.innerHTML = `
         <input type="checkbox" class="igb-proto-check" ${ev.enabled ? 'checked' : ''} data-k="enabled">
         <input type="text" value="${ev.label.replace(/"/g, '&quot;')}" data-k="label">
-        <input type="number" value="${start}" min="0" max="320" data-k="start" title="dias a partir da DUM">
-        <input type="number" value="${end}" min="0" max="320" placeholder="—" data-k="end" title="fim da janela (vazio = evento pontual)">
+        <input type="number" value="${startSem}" min="0" max="45" step="0.1" data-k="start" title="semanas a partir da DUM">
+        <input type="number" value="${endSem}" min="0" max="45" step="0.1" placeholder="—" data-k="end" title="fim da janela em semanas (vazio = evento pontual)">
         <input type="number" value="${ev.trimestre}" min="1" max="3" data-k="trimestre">
         <input type="color" class="igb-proto-color" value="${cor}" data-k="cor" title="cor do evento (branco = sem fundo no calendário)">
         <input type="number" value="${op}" min="0" max="100" step="5" data-k="opacidade" title="opacidade da cor (0-100%)">
@@ -770,13 +736,18 @@
             ev.opacidade = isNaN(n) ? 100 : Math.max(0, Math.min(100, n));
           }
           else if (k === 'start') {
-            const n = Number(e.target.value);
-            ev.offset_dias = n;
-            if (ev.window) ev.window[0] = n;
+            const weeks = Number(e.target.value);
+            const days = Math.round(weeks * 7);
+            ev.offset_dias = days;
+            if (ev.window) ev.window[0] = days;
           } else if (k === 'end') {
-            const n = Number(e.target.value);
-            if (e.target.value === '') ev.window = null;
-            else ev.window = [ev.window ? ev.window[0] : ev.offset_dias, n];
+            if (e.target.value === '') {
+              ev.window = null;
+            } else {
+              const weeks = Number(e.target.value);
+              const days = Math.round(weeks * 7);
+              ev.window = [ev.window ? ev.window[0] : ev.offset_dias, days];
+            }
           }
           saveProto();
           render();
@@ -974,9 +945,14 @@
           proto = Array.isArray(data.protocolo) && data.protocolo.length
             ? data.protocolo : protoDefault();
         }
-        // migração: garante que todo evento tenha cor
+        // migração: preenche campos faltantes no protocolo importado
         proto.forEach((ev) => {
-          if (!ev.cor) ev.cor = CORES_DEFAULT[ev.id] || '#3498db';
+          const def = findDefault(ev.id);
+          if (!ev.cor) ev.cor = (def && def.cor) || '#3498db';
+          if (typeof ev.opacidade !== 'number') ev.opacidade = (def && def.opacidade) ?? 100;
+          if (typeof ev.icone !== 'string') ev.icone = (def && def.icone) || '';
+          if (typeof ev.marker !== 'string') ev.marker = (def && def.marker) || '';
+          if (typeof ev.grupo !== 'string') ev.grupo = (def && def.grupo) || 'ecografia';
         });
         saveState();
         saveProto();
