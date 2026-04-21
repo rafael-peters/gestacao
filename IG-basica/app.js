@@ -481,9 +481,11 @@
     }
 
     if (!_calScrolledOnce && currentMonthEl) {
-      // na 1ª renderização, posiciona o mês atual no topo
+      // na 1ª renderização, posiciona o mês atual no topo DO container
+      // (NÃO usa scrollIntoView — isso rolaria a página inteira)
       requestAnimationFrame(() => {
-        currentMonthEl.scrollIntoView({ block: 'start', behavior: 'instant' });
+        const offsetDentro = currentMonthEl.offsetTop - container.offsetTop;
+        container.scrollTop = Math.max(0, offsetDentro);
         _calScrolledOnce = true;
       });
     } else {
