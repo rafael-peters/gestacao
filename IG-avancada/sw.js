@@ -2,16 +2,17 @@
  * Service Worker — IG-avancada
  * Estratégia: cache-first para shell + network-first para HTML (com fallback cache)
  */
-const CACHE_VERSION = 'ig-avancada-v1';
+const CACHE_VERSION = 'ig-avancada-v2';
+// SHELL com caminhos relativos ao escopo do service worker (mesma pasta do sw.js)
 const SHELL = [
-    '/IG-avancada/',
-    '/IG-avancada/index.html',
-    '/IG-avancada/manifest.json',
-    '/assets/css/ig-avancada.css',
-    '/assets/js/core/biometria.js',
-    '/assets/js/core/ga-methods.js',
-    '/assets/js/core/timeline.js',
-    '/assets/js/pages/ig-avancada.js',
+    './',
+    './index.html',
+    './manifest.json',
+    '../assets/css/ig-avancada.css',
+    '../assets/js/core/biometria.js',
+    '../assets/js/core/ga-methods.js',
+    '../assets/js/core/timeline.js',
+    '../assets/js/pages/ig-avancada.js',
 ];
 
 self.addEventListener('install', (event) => {
@@ -43,7 +44,7 @@ self.addEventListener('fetch', (event) => {
                 const clone = res.clone();
                 caches.open(CACHE_VERSION).then((c) => c.put(req, clone));
                 return res;
-            }).catch(() => caches.match(req).then((hit) => hit || caches.match('/IG-avancada/')))
+            }).catch(() => caches.match(req).then((hit) => hit || caches.match('./')))
         );
         return;
     }

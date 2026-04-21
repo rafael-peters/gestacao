@@ -785,7 +785,7 @@
   // ============ SERVICE WORKER ============
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/IG-avancada/sw.js', { scope: '/IG-avancada/' })
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
         .catch((e) => console.warn('SW register failed:', e));
     });
   }

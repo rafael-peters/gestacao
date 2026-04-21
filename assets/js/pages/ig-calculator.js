@@ -89,7 +89,7 @@ async function carregarExames() {
 
     // Se não houver, carregar do arquivo JSON
     try {
-        const response = await fetch('/assets/data/exames.json');
+        const response = await fetch('../assets/data/exames.json');
         const data = await response.json();
         estado.exames = data.periodos;
     } catch (error) {

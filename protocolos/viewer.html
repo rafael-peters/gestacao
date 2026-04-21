@@ -6,7 +6,7 @@
     <title>Protocolo | Dr. Rafael Peters</title>
     <meta name="robots" content="noindex">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
-    <link rel="stylesheet" href="/assets/css/ig-avancada.css">
+    <link rel="stylesheet" href="../assets/css/ig-avancada.css">
     <style>
         .proto-head {
             background: linear-gradient(135deg, var(--accent-blue-soft), var(--accent-purple-soft)), var(--bg-card);
@@ -160,8 +160,8 @@
                 <p class="subtitulo">Visualizador de protocolo de pré-natal</p>
             </div>
             <div class="iga-header-side">
-                <a href="/protocolos/" class="btn btn-sm btn-secondary">← Protocolos</a>
-                <a href="/IG-avancada/" class="btn btn-sm btn-secondary">🔬 IG-avancada</a>
+                <a href="./" class="btn btn-sm btn-secondary">← Protocolos</a>
+                <a href="../IG-avancada/" class="btn btn-sm btn-secondary">🔬 IG-avancada</a>
             </div>
         </header>
 
@@ -180,7 +180,7 @@
         </div>
 
         <footer class="iga-footer">
-            <p><a href="/">🏠 Home</a> <span class="separador">·</span> <a href="/protocolos/">📋 Protocolos</a> <span class="separador">·</span> <a href="/IG-avancada/">🔬 IG-avancada</a></p>
+            <p><a href="../">🏠 Home</a> <span class="separador">·</span> <a href="./">📋 Protocolos</a> <span class="separador">·</span> <a href="../IG-avancada/">🔬 IG-avancada</a></p>
             <p class="autor">Dr. Rafael Peters · Medicina Fetal e Ultrassonografia</p>
         </footer>
     </div>
@@ -212,7 +212,7 @@
         async function carregar() {
             const params = new URLSearchParams(location.search);
             const p = params.get('p') || 'pessoal';
-            const path = `/protocolos/data/${p}.json`;
+            const path = `./data/${p}.json`;
             document.getElementById('filePath').textContent = path;
 
             const cont = document.getElementById('conteudo');
